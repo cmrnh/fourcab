@@ -1,12 +1,16 @@
 package com.fourcab;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.content.IntentFilter.AuthorityEntry;
 import android.content.SharedPreferences.Editor;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -56,6 +60,8 @@ public class CheckInActivity extends Activity {
 			mMap.setMyLocationEnabled(true);
 			mMyLocationHandler.sendMessage(mMyLocationHandler.obtainMessage(0));
 		}
+		
+		getCheckins();
 	}
 
 	@Override
@@ -81,9 +87,18 @@ public class CheckInActivity extends Activity {
 		LatLng latlng = new LatLng(location.getLatitude(), location.getLongitude());
 		CameraPosition cameraPosition = new CameraPosition.Builder()
 		.target(latlng)
-		.zoom(11)
+		.zoom(13)
 		.build();
 		map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 	}
 	
+	public void getCheckins() {
+		new Thread() {
+			@Override
+			public void run() {
+				FourSquareApi api = new FourSquareApi(CheckInActivity.this);
+				Log.v("jason", "api returned: " + api.getUserInfo());
+			}
+		}.start();
+	}
 }
