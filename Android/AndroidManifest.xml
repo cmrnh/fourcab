@@ -41,7 +41,7 @@
             android:value="AIzaSyADSC62W8mU3LkJNMEch2PvylX7kXWj944" />
 
         <activity
-            android:name="com.fourcab.SignInActivity"
+            android:name="com.fourcab.SignUpActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
