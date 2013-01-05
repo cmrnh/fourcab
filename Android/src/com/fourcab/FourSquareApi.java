@@ -7,6 +7,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
@@ -63,7 +64,12 @@ public class FourSquareApi {
 	public JSONObject getUserInfo() {
 		JSONObject userJson = executeHttpGet(API+ "users/self?oauth_token=" + mAuthToken);
 		if (userJson == null) return null;
-		return userJson;
+		try {
+			return userJson.getJSONObject("user");
+		} catch (JSONException e) {
+			Log.e(TAG, "JSONException: ", e);
+			return null;
+		}
 	}
 
 //	public JSONArray getCheckins(String userId) {

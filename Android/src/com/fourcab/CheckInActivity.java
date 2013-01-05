@@ -2,7 +2,14 @@ package com.fourcab;
 
 import java.util.ArrayList;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
+import android.app.LoaderManager.LoaderCallbacks;
+import android.content.AsyncTaskLoader;
+import android.content.Context;
+import android.content.Loader;
 import android.content.SharedPreferences;
 import android.content.IntentFilter.AuthorityEntry;
 import android.content.SharedPreferences.Editor;
@@ -16,11 +23,14 @@ import android.view.MenuItem;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
-public class CheckInActivity extends Activity {
+public class CheckInActivity extends Activity implements LoaderCallbacks<JSONObject>, OnMarkerClickListener {
 
 	protected static final String TAG = CheckInActivity.class.getSimpleName();
 	
@@ -59,9 +69,10 @@ public class CheckInActivity extends Activity {
 		if (mMap != null) {
 			mMap.setMyLocationEnabled(true);
 			mMyLocationHandler.sendMessage(mMyLocationHandler.obtainMessage(0));
+			mMap.setOnMarkerClickListener(this);
 		}
-		
-		getCheckins();
+
+		getLoaderManager().initLoader(0, null, this);
 	}
 
 	@Override
@@ -92,13 +103,70 @@ public class CheckInActivity extends Activity {
 		map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 	}
 	
-	public void getCheckins() {
-		new Thread() {
-			@Override
-			public void run() {
-				FourSquareApi api = new FourSquareApi(CheckInActivity.this);
-				Log.v("jason", "api returned: " + api.getUserInfo());
-			}
-		}.start();
+	private void placeMarker(double latitude, double longitude, String title) {
+		LatLng latLng = new LatLng(latitude, longitude);
+		MarkerOptions options = new MarkerOptions();
+		options.position(latLng);
+		options.title(title);
+		mMap.addMarker(options);
 	}
+	
+	@Override
+	public Loader<JSONObject> onCreateLoader(int id, Bundle args) {
+		Log.v("jason", "onCreateLoader");
+		return new UserInfoTask(this);
+	}
+
+	@Override
+	public void onLoadFinished(Loader<JSONObject> loader, JSONObject jsonObj) {
+		try {
+			Log.v("jason", "onLoadFinished: " + jsonObj.toString(2));
+
+			JSONObject checkin = (JSONObject) jsonObj.getJSONObject("checkins").getJSONArray("items").get(0);
+			JSONObject venue = checkin.getJSONObject("venue");
+			JSONObject location = venue.getJSONObject("location");
+			double lat = location.getDouble("lat");
+			double lng = location.getDouble("lng");
+			placeMarker(lat, lng, venue.getString("name"));
+		} catch (JSONException e) {
+			Log.e("jason", "JSONException: ", e);
+		}
+	}
+
+	@Override
+	public void onLoaderReset(Loader<JSONObject> arg0) {
+	}
+	
+	private static class UserInfoTask extends AsyncTaskLoader<JSONObject> {
+
+		public UserInfoTask(Context context) {
+			super(context);
+		}
+		
+		@Override
+		protected void onStartLoading() {
+			forceLoad();
+		}
+
+		@Override
+		public JSONObject loadInBackground() {
+			Log.v("jason", "loadInBackground");
+			FourSquareApi api = new FourSquareApi(getContext());
+			JSONObject obj = null;
+			try {
+				obj = api.getUserInfo();
+			} catch(Exception e) {
+				Log.e("jason", "Exception: ", e);
+			}
+			return obj;
+		}
+	}
+
+	@Override
+	public boolean onMarkerClick(Marker marker) {
+		Log.v("jason", "onMarkerClick");
+		marker.showInfoWindow();
+		return true;
+	}
+
 }
