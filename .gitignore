@@ -1,1 +1,9 @@
 .DS_Store
+*~
+
+Android/bin/
+Android/gen/
+Android/libs/
+Android/.settings/
+Android/.classpath
+Android/.project
