@@ -17,7 +17,17 @@
 		7E8A013C16988CE700EDA7AC /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E8A013B16988CE700EDA7AC /* Default@2x.png */; };
 		7E8A013E16988CE700EDA7AC /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E8A013D16988CE700EDA7AC /* Default-568h@2x.png */; };
 		7E8A014116988CE700EDA7AC /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7E8A013F16988CE700EDA7AC /* MainStoryboard.storyboard */; };
-		7E8A014416988CE700EDA7AC /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E8A014316988CE700EDA7AC /* ViewController.m */; };
+		7E8A015316988E2500EDA7AC /* UIView+Framing.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E8A015216988E2500EDA7AC /* UIView+Framing.m */; };
+		7E8A015616988F5300EDA7AC /* UIColor+fourcab.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E8A015516988F5300EDA7AC /* UIColor+fourcab.m */; };
+		7E8A015D1698906400EDA7AC /* SignInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E8A015C1698906400EDA7AC /* SignInViewController.m */; };
+		7E8A0163169890EC00EDA7AC /* connect-blue.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E8A0161169890EC00EDA7AC /* connect-blue.png */; };
+		7E8A0164169890EC00EDA7AC /* connect-blue@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E8A0162169890EC00EDA7AC /* connect-blue@2x.png */; };
+		7E8A01671698953900EDA7AC /* DestinationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E8A01661698953900EDA7AC /* DestinationViewController.m */; };
+		7E8A016A1698956100EDA7AC /* PeopleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E8A01691698956100EDA7AC /* PeopleViewController.m */; };
+		7E8A016D169895FF00EDA7AC /* PersonCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E8A016C169895FF00EDA7AC /* PersonCollectionViewCell.m */; };
+		7E8A016F1698965A00EDA7AC /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E8A016E1698965A00EDA7AC /* QuartzCore.framework */; };
+		7E8A017516989A3500EDA7AC /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E8A017416989A3500EDA7AC /* MapKit.framework */; };
+		7E8A017816989A3A00EDA7AC /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E8A017716989A3A00EDA7AC /* CoreLocation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,8 +45,23 @@
 		7E8A013B16988CE700EDA7AC /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		7E8A013D16988CE700EDA7AC /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		7E8A014016988CE700EDA7AC /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard.storyboard; sourceTree = "<group>"; };
-		7E8A014216988CE700EDA7AC /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		7E8A014316988CE700EDA7AC /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		7E8A015116988E2500EDA7AC /* UIView+Framing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIView+Framing.h"; path = "fourcab/Categories/UIView+Framing.h"; sourceTree = "<group>"; };
+		7E8A015216988E2500EDA7AC /* UIView+Framing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+Framing.m"; path = "fourcab/Categories/UIView+Framing.m"; sourceTree = "<group>"; };
+		7E8A015416988F5300EDA7AC /* UIColor+fourcab.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIColor+fourcab.h"; path = "fourcab/Categories/UIColor+fourcab.h"; sourceTree = "<group>"; };
+		7E8A015516988F5300EDA7AC /* UIColor+fourcab.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIColor+fourcab.m"; path = "fourcab/Categories/UIColor+fourcab.m"; sourceTree = "<group>"; };
+		7E8A015B1698906400EDA7AC /* SignInViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SignInViewController.h; path = Controllers/SignInViewController.h; sourceTree = "<group>"; };
+		7E8A015C1698906400EDA7AC /* SignInViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SignInViewController.m; path = Controllers/SignInViewController.m; sourceTree = "<group>"; };
+		7E8A0161169890EC00EDA7AC /* connect-blue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "connect-blue.png"; sourceTree = "<group>"; };
+		7E8A0162169890EC00EDA7AC /* connect-blue@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "connect-blue@2x.png"; sourceTree = "<group>"; };
+		7E8A01651698953900EDA7AC /* DestinationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DestinationViewController.h; path = Controllers/DestinationViewController.h; sourceTree = "<group>"; };
+		7E8A01661698953900EDA7AC /* DestinationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DestinationViewController.m; path = Controllers/DestinationViewController.m; sourceTree = "<group>"; };
+		7E8A01681698956000EDA7AC /* PeopleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PeopleViewController.h; path = Controllers/PeopleViewController.h; sourceTree = "<group>"; };
+		7E8A01691698956100EDA7AC /* PeopleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PeopleViewController.m; path = Controllers/PeopleViewController.m; sourceTree = "<group>"; };
+		7E8A016B169895FF00EDA7AC /* PersonCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PersonCollectionViewCell.h; path = View/PersonCollectionViewCell.h; sourceTree = "<group>"; };
+		7E8A016C169895FF00EDA7AC /* PersonCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PersonCollectionViewCell.m; path = View/PersonCollectionViewCell.m; sourceTree = "<group>"; };
+		7E8A016E1698965A00EDA7AC /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		7E8A017416989A3500EDA7AC /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		7E8A017716989A3A00EDA7AC /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -44,6 +69,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7E8A017816989A3A00EDA7AC /* CoreLocation.framework in Frameworks */,
+				7E8A017516989A3500EDA7AC /* MapKit.framework in Frameworks */,
+				7E8A016F1698965A00EDA7AC /* QuartzCore.framework in Frameworks */,
 				7E8A012816988CE700EDA7AC /* UIKit.framework in Frameworks */,
 				7E8A012A16988CE700EDA7AC /* Foundation.framework in Frameworks */,
 				7E8A012C16988CE700EDA7AC /* CoreGraphics.framework in Frameworks */,
@@ -73,6 +101,9 @@
 		7E8A012616988CE700EDA7AC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7E8A017716989A3A00EDA7AC /* CoreLocation.framework */,
+				7E8A017416989A3500EDA7AC /* MapKit.framework */,
+				7E8A016E1698965A00EDA7AC /* QuartzCore.framework */,
 				7E8A012716988CE700EDA7AC /* UIKit.framework */,
 				7E8A012916988CE700EDA7AC /* Foundation.framework */,
 				7E8A012B16988CE700EDA7AC /* CoreGraphics.framework */,
@@ -86,9 +117,11 @@
 				7E8A013616988CE700EDA7AC /* AppDelegate.h */,
 				7E8A013716988CE700EDA7AC /* AppDelegate.m */,
 				7E8A013F16988CE700EDA7AC /* MainStoryboard.storyboard */,
-				7E8A014216988CE700EDA7AC /* ViewController.h */,
-				7E8A014316988CE700EDA7AC /* ViewController.m */,
+				7E8A015F1698907100EDA7AC /* View */,
+				7E8A015E1698906800EDA7AC /* Controllers */,
+				7E8A0160169890EC00EDA7AC /* Images */,
 				7E8A012E16988CE700EDA7AC /* Supporting Files */,
+				7E8A015016988DBE00EDA7AC /* Categories */,
 			);
 			path = fourcab;
 			sourceTree = "<group>";
@@ -107,6 +140,49 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		7E8A015016988DBE00EDA7AC /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				7E8A015116988E2500EDA7AC /* UIView+Framing.h */,
+				7E8A015216988E2500EDA7AC /* UIView+Framing.m */,
+				7E8A015416988F5300EDA7AC /* UIColor+fourcab.h */,
+				7E8A015516988F5300EDA7AC /* UIColor+fourcab.m */,
+			);
+			name = Categories;
+			path = ..;
+			sourceTree = "<group>";
+		};
+		7E8A015E1698906800EDA7AC /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				7E8A015B1698906400EDA7AC /* SignInViewController.h */,
+				7E8A015C1698906400EDA7AC /* SignInViewController.m */,
+				7E8A01651698953900EDA7AC /* DestinationViewController.h */,
+				7E8A01661698953900EDA7AC /* DestinationViewController.m */,
+				7E8A01681698956000EDA7AC /* PeopleViewController.h */,
+				7E8A01691698956100EDA7AC /* PeopleViewController.m */,
+			);
+			name = Controllers;
+			sourceTree = "<group>";
+		};
+		7E8A015F1698907100EDA7AC /* View */ = {
+			isa = PBXGroup;
+			children = (
+				7E8A016B169895FF00EDA7AC /* PersonCollectionViewCell.h */,
+				7E8A016C169895FF00EDA7AC /* PersonCollectionViewCell.m */,
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
+		7E8A0160169890EC00EDA7AC /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				7E8A0161169890EC00EDA7AC /* connect-blue.png */,
+				7E8A0162169890EC00EDA7AC /* connect-blue@2x.png */,
+			);
+			path = Images;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -116,6 +192,7 @@
 			buildPhases = (
 				7E8A011F16988CE700EDA7AC /* Sources */,
 				7E8A012016988CE700EDA7AC /* Frameworks */,
+				7E8A014E16988D5A00EDA7AC /* ShellScript */,
 				7E8A012116988CE700EDA7AC /* Resources */,
 			);
 			buildRules = (
@@ -163,10 +240,28 @@
 				7E8A013C16988CE700EDA7AC /* Default@2x.png in Resources */,
 				7E8A013E16988CE700EDA7AC /* Default-568h@2x.png in Resources */,
 				7E8A014116988CE700EDA7AC /* MainStoryboard.storyboard in Resources */,
+				7E8A0163169890EC00EDA7AC /* connect-blue.png in Resources */,
+				7E8A0164169890EC00EDA7AC /* connect-blue@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		7E8A014E16988D5A00EDA7AC /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#!/bin/bash\nbuildNumber=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"$INFOPLIST_FILE\")\ndec=$((0x$buildNumber))\nbuildNumber=$(($dec + 1))\nhex=$(printf \"%X\" $buildNumber)\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $hex\" \"$INFOPLIST_FILE\"";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		7E8A011F16988CE700EDA7AC /* Sources */ = {
@@ -175,7 +270,12 @@
 			files = (
 				7E8A013416988CE700EDA7AC /* main.m in Sources */,
 				7E8A013816988CE700EDA7AC /* AppDelegate.m in Sources */,
-				7E8A014416988CE700EDA7AC /* ViewController.m in Sources */,
+				7E8A015316988E2500EDA7AC /* UIView+Framing.m in Sources */,
+				7E8A015616988F5300EDA7AC /* UIColor+fourcab.m in Sources */,
+				7E8A015D1698906400EDA7AC /* SignInViewController.m in Sources */,
+				7E8A01671698953900EDA7AC /* DestinationViewController.m in Sources */,
+				7E8A016A1698956100EDA7AC /* PeopleViewController.m in Sources */,
+				7E8A016D169895FF00EDA7AC /* PersonCollectionViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -292,6 +392,7 @@
 				7E8A014916988CE700EDA7AC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
