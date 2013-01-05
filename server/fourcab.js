@@ -16,8 +16,8 @@ var CONFIG = {
 // GLOBAL STATE
 g_userdb = {};
 
-// WEB SERVER
-var app = express();
+
+// State processing
 
 // a.lat, a.long, b.lat, b.long are used. Result in miles.
 function calcDistance(a,b) {
@@ -44,7 +44,7 @@ function sendRides(res, userId) {
 	});
 
 	// exclude everything too far away. then sort by the distance between pickup points
-	candidates = candidates.filter(x, function(x) {
+	candidates = candidates.filter(function(x) {
 		return x[1] <= CONFIG.max_pickup_distance_miles
 			&& x[2] <= CONFIG.max_dropoff_distance_miles;
 	});
@@ -67,8 +67,16 @@ function sendRides(res, userId) {
 	res.json(data);
 }
 
+//
+// WEB SERVER
+//
+
+var app = express();
+app.use(express.bodyParser());
+
 
 app.post('/api/checkin/', function(req,res) {
+	console.log(req.body);
 	fsq.fetchUserWithOauth(req.body.foursquareOauthToken, function(err,userId) {
 		if(err) throw err;
 		
@@ -79,29 +87,32 @@ app.post('/api/checkin/', function(req,res) {
 		};
 
 		sendRides(res, userId);
+		console.log('AFTER /api/checkin/ CALL:', g_userdb);
 	});
 });
 
 app.post('/api/cancel/', function(req,res) {
-	var userId = fsq.userProfileFromOauthSync(req.body.foursquareOauthToken);
+	var userId = fsq.userProfileFromOauthSync(req.body.foursquareOauthToken).userId;
 	var dbEntry = g_userdb[userId];
 	if(!g_userdb[userId].recentPoll)
 		throw "Cancelling non-existent booking";
 	g_userdb[userId].recentPoll = null;
 	res.send(200, '200 OK');
 	res.end();
+	console.log('AFTER /api/cancel/ CALL:', g_userdb);
 });
 
 app.post('/api/rides/', function(req,res) {
-	var userId = fsq.userProfileFromOauthSync(req.body.foursquareOauthToken);
+	var userId = fsq.userProfileFromOauthSync(req.body.foursquareOauthToken).userId;
 	var dbEntry = g_userdb[userId];
-	if(!g_userdb[userId].recentPoll)
+	if(!dbEntry.recentPoll)
 		throw "Polling non-existent booking";
 	
 	// update last poll timestamp
 	dbEntry.recentPoll = Date.now();
 
 	sendRides(res, userId);
+	console.log('AFTER /api/rides/ CALL:', g_userdb);
 });
 
 app.listen(CONFIG.port);
