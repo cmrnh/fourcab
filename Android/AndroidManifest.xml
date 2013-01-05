@@ -50,6 +50,10 @@
             </intent-filter>
         </activity>
         <activity
+            android:name="com.fourcab.FoursquareLogInActivity"
+            android:label="@string/title_foursquare_log_in" >
+        </activity>
+        <activity
             android:name="com.fourcab.CheckInActivity"
             android:label="@string/title_activity_check_in" >
         </activity>

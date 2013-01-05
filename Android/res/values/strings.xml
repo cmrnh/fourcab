@@ -10,5 +10,7 @@
     <string name="search">Search</string>
     <string name="title_activity_people">PeopleActivity</string>
     <string name="person">Person</string>
+    <string name="title_foursquare_log_in">Foursquare Log In</string>
+    <string name="clear_prefs">Clear Prefs</string>
 
 </resources>

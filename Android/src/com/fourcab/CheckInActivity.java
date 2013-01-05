@@ -1,11 +1,14 @@
 package com.fourcab;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.Menu;
+import android.view.MenuItem;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -57,6 +60,19 @@ public class CheckInActivity extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_check_in, menu);
         return true;
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	switch(item.getItemId()) {
+    	case R.id.clear_prefs:
+    		SharedPreferences prefs = getSharedPreferences(Constants.FOURCAB_PREFS, 0);
+    		Editor editor = prefs.edit();
+    		editor.clear();
+    		editor.commit();
+    		return true;
+    	}
+    	return super.onOptionsItemSelected(item);
     }
 
     private static void zoomToLocation(GoogleMap map, Location location) {

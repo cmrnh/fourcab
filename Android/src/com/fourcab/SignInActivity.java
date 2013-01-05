@@ -1,9 +1,10 @@
 package com.fourcab;
 
-import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
-import android.view.Menu;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 public class SignInActivity extends Activity {
@@ -13,18 +14,23 @@ public class SignInActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
     }
-
+    
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.activity_sign_in, menu);
-        return true;
+    protected void onResume() {
+    	super.onResume();
+    	SharedPreferences prefs = getSharedPreferences(Constants.FOURCAB_PREFS, 0);
+    	String key = prefs.getString(Constants.FOURSQUARE_TOKEN_KEY, null);
+    	
+    	// if we have a token, just kill this activity
+    	if (key != null) {
+            Intent intent = new Intent(this, CheckInActivity.class);
+            startActivity(intent);
+            finish();
+    	}
     }
     
     public void signIn(final View view) {
-        // Do foursquare sign in here
-        Intent intent = new Intent(this, PeopleActivity.class);
+        Intent intent = new Intent(this, FoursquareLogInActivity.class);
         startActivity(intent);
     }
-
 }
