@@ -23,7 +23,7 @@ public class SignInActivity extends Activity {
     
     public void signIn(final View view) {
         // Do foursquare sign in here
-        Intent intent = new Intent(this, CheckInActivity.class);
+        Intent intent = new Intent(this, PeopleActivity.class);
         startActivity(intent);
     }
 

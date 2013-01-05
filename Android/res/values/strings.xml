@@ -8,5 +8,7 @@
     <string name="please_sign_in">Please sign into Foursquare</string>
     <string name="title_activity_check_in">CheckInActivity</string>
     <string name="search">Search</string>
+    <string name="title_activity_people">PeopleActivity</string>
+    <string name="person">Person</string>
 
 </resources>
