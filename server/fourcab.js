@@ -1,7 +1,8 @@
 
 var http = require('http'),
 	fsq = require('./libs/fsq.js'),
-	express = require('express');
+	express = require('express'),
+	twilioAPI = require('twilio-api');
 
 
 // CONFIGURATION
@@ -11,9 +12,40 @@ var CONFIG = {
 	max_pickup_distance_miles: 0.15,  // about three blocks - being cautious for demo purposes
 	max_dropoff_distance_miles: 1.0,
 	polling_timeout: 3 * 60 * 1000,   // three minutes
+
+	TWILIO_ACCOUNT_SID: "AC57cc1066203ab42b113c5e5152f5c8a9",
+	TWILIO_AUTH_TOKEN: "ef4be32135d057ca0ccaef150c063eef",
+	TWILIO_APP_SID: "AP6f44db7a601f4411aeadfeebf9742748",
+	OUR_PHONE_NUMBER: "3473218386",
+
+	MONITOR_PHONE_NUMBER: "4154308612"  // This is Andrew!
 };
 
 
+// SMS code
+var g_twilio = null;
+
+function sendSMS(toNumber, smsContent) {
+
+	g_twilio.sendSMS(
+		CONFIG.OUR_PHONE_NUMBER,
+		toNumber,
+		smsContent,
+		function(err, smsObj) {
+			if(err) {
+				console.log("ERROR queueing SMS to " + toNumber, err);
+			} else {
+				console.log("Queued SMS to " + toNumber);
+				smsObj.once('sendStatus', function(success, st) {
+					if(success)
+						console.log('Sent SMS to ' + toNumber);
+					else
+						console.log('ERROR sending SMS to ' + toNumber);
+				});
+			}
+		});
+
+}
 
 // GLOBAL STATE
 g_userdb = {};
@@ -97,12 +129,12 @@ app.post('/api/checkin/', function(req,res) {
 	console.log(req.body);
 	fsq.fetchUserWithOauth(req.body.foursquareOauthToken, function(err,userId) {
 		if(err) throw err;
-		
-		g_userdb[userId] = {
-			pickup: req.body.pickup,
-			dropoff: req.body.dropoff,
-			recentPoll: Date.now()
-		};
+
+		if(!g_userdb[userId]) g_userdb[userId] = {};
+
+		g_userdb[userId].pickup = req.body.pickup;
+		g_userdb[userId].dropoff = req.body.dropoff;
+		g_userdb[userId].recentPoll = Date.now();
 
 		sendRides(res, userId);
 		console.log('AFTER /api/checkin/ CALL:', g_userdb);
@@ -140,10 +172,31 @@ app.post('/api/rides/', function(req,res) {
 	console.log('AFTER /api/rides/ CALL:', g_userdb);
 });
 
+app.post('/4push/', function(req,res) {
+	console.log('');
+	console.log('POST TO /4push/');
+	console.log('', req.body);
+	console.log('');
+});
+
+
 app.use('/public', express.static(__dirname + '/public'));
 app.get('/', express.static(__dirname + '/index.html'));
 
-app.listen(CONFIG.port);
+
+
+// Set up web server and twilio
+
+var twilio_cli = new twilioAPI.Client(CONFIG.TWILIO_ACCOUNT_SID, CONFIG.TWILIO_AUTH_TOKEN);
+twilio_cli.account.getApplication(CONFIG.TWILIO_APP_SID, function(err, twilio) {
+	if(err) throw err;
+	g_twilio = twilio;
+
+	app.listen(CONFIG.port);
+
+	sendSMS(MONITOR_PHONE_NUMBER, "fourcab.js has been started");
+});
+
 
 // Random testing stuff
 if(0) {
