@@ -22,8 +22,7 @@ UIGestureRecognizerDelegate,
 UISearchBarDelegate,
 UITableViewDataSource,
 UITableViewDelegate,
-UIAlertViewDelegate,
-NSURLConnectionDelegate>
+UIAlertViewDelegate>
 
 @property (strong, nonatomic) IBOutlet UISearchBar *searchBar;
 @property (strong, nonatomic) IBOutlet MKMapView *mapView;

@@ -17,3 +17,4 @@ extern NSString *const fourcabAPIBaseURL;
 // Segue
 extern NSString *const kSignInSegueId;
 extern NSString *const kShowPeopleSegueId;
+extern NSString *const kShowPersonSegueId;

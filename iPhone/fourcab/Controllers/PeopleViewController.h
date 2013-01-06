@@ -20,8 +20,9 @@ NSURLConnectionDelegate>
 @property (strong, nonatomic) NSDictionary *dictionary;
 @property (strong, nonatomic) NSMutableData *receivedData;
 @property (strong, nonatomic) UIActivityIndicatorView *spinner;
+@property (strong, nonatomic) IBOutlet UIBarButtonItem *cancelButton;
 
-- (void) processData;
+- (IBAction)cancelAction:(id)sender;
 - (void) processDictionary;
 
 @end
