@@ -149,18 +149,29 @@ public class CheckInActivity extends Activity implements LoaderCallbacks<JSONObj
 
 	@Override
 	public void onLoadFinished(Loader<JSONObject> loader, JSONObject jsonObj) {
-		try {
-			Log.v("jason", "onLoadFinished: " + jsonObj.toString(2));
+		Marker marker = null;
+		if (jsonObj != null) {
+			try {
+				Log.v("jason", "onLoadFinished: " + jsonObj.toString(2));
 
-			JSONObject checkin = (JSONObject) jsonObj.getJSONObject("checkins").getJSONArray("items").get(0);
-			JSONObject venue = checkin.getJSONObject("venue");
-			JSONObject location = venue.getJSONObject("location");
-			double lat = location.getDouble("lat");
-			double lng = location.getDouble("lng");
-			Marker marker = placeMarker(lat, lng, venue.getString("name"));
+				JSONObject checkin = (JSONObject) jsonObj.getJSONObject("checkins").getJSONArray("items").get(0);
+				JSONObject venue = checkin.getJSONObject("venue");
+				JSONObject location = venue.getJSONObject("location");
+				double lat = location.getDouble("lat");
+				double lng = location.getDouble("lng");
+				marker = placeMarker(lat, lng, venue.getString("name"));
+				marker.showInfoWindow();
+			} catch (JSONException e) {
+				Log.e("jason", "JSONException: ", e);
+			}
+		}
+		
+		// If fail to get last checkin, use current location
+		if (marker == null) {
+			double lat = mMap.getMyLocation().getLatitude();
+			double lng = mMap.getMyLocation().getLongitude();
+			marker = placeMarker(lat, lng, getResources().getString(R.string.current_location));
 			marker.showInfoWindow();
-		} catch (JSONException e) {
-			Log.e("jason", "JSONException: ", e);
 		}
 	}
 
