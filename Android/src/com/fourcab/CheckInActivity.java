@@ -28,6 +28,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
+import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -35,7 +36,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class CheckInActivity extends Activity implements LoaderCallbacks<JSONObject>, OnMarkerClickListener, OnInfoWindowClickListener, OnMapClickListener {
+public class CheckInActivity extends Activity implements LoaderCallbacks<JSONObject>, OnMarkerClickListener, OnInfoWindowClickListener, OnMapClickListener, OnMapLongClickListener {
 
 	protected static final String TAG = CheckInActivity.class.getSimpleName();
 
@@ -90,6 +91,7 @@ public class CheckInActivity extends Activity implements LoaderCallbacks<JSONObj
 			mMap.setOnMarkerClickListener(this);
 			mMap.setOnInfoWindowClickListener(this);
 			mMap.setOnMapClickListener(this);
+			mMap.setOnMapLongClickListener(this);
 			mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
 			
 		}
@@ -230,6 +232,15 @@ public class CheckInActivity extends Activity implements LoaderCallbacks<JSONObj
 
 	@Override
 	public void onMapClick(LatLng point) {
+		setDestination(point);
+	}
+
+	@Override
+	public void onMapLongClick(LatLng point) {
+		setDestination(point);
+	}
+	
+	private void setDestination(LatLng point) {
 		if (mDestination != null) {
 			mDestination.remove();
 			mDestination = null;
