@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 public class SignUpActivity extends Activity {
@@ -18,10 +19,11 @@ public class SignUpActivity extends Activity {
     protected void onResume() {
     	super.onResume();
     	SharedPreferences prefs = getSharedPreferences(Constants.FOURCAB_PREFS, 0);
-    	String key = prefs.getString(Constants.FOURSQUARE_TOKEN_KEY, null);
+    	String token = prefs.getString(Constants.FOURSQUARE_TOKEN_KEY, null);
     	
     	// if we have a token, just kill this activity
-    	if (key != null) {
+    	if (token != null) {
+    		Log.v("jason", "token=" + token);
             Intent intent = new Intent(this, CheckInActivity.class);
             startActivity(intent);
             finish();

@@ -1,11 +1,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <item
+<!--     <item
         android:id="@+id/search"
         android:icon="@android:drawable/ic_menu_search"
         android:showAsAction="always"
         android:title="@string/search"/>
-    <item
+ -->
+     <item
         android:id="@+id/clear_prefs"
         android:showAsAction="never"
         android:title="@string/clear_prefs"/>
