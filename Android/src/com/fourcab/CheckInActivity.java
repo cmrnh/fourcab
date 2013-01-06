@@ -41,6 +41,8 @@ public class CheckInActivity extends Activity implements LoaderCallbacks<JSONObj
 	protected static final String TAG = CheckInActivity.class.getSimpleName();
 
 	private static final String CONFIRM = "Confirm Destination?";
+
+	private static final String PICKUP = "Pick up at:";
 	
 	GoogleMap mMap;
 	MyLocationHandler mMyLocationHandler;
@@ -139,11 +141,12 @@ public class CheckInActivity extends Activity implements LoaderCallbacks<JSONObj
         editor.commit();
 	}
 	
-	private Marker placeMarker(double latitude, double longitude, String title) {
+	private Marker placeMarker(double latitude, double longitude, String title, String snippet) {
 		LatLng latLng = new LatLng(latitude, longitude);
 		MarkerOptions options = new MarkerOptions();
 		options.position(latLng);
 		options.title(title);
+		options.snippet(snippet);
 		return mMap.addMarker(options);
 	}
 	
@@ -165,7 +168,7 @@ public class CheckInActivity extends Activity implements LoaderCallbacks<JSONObj
 				JSONObject location = venue.getJSONObject("location");
 				double lat = location.getDouble("lat");
 				double lng = location.getDouble("lng");
-				marker = placeMarker(lat, lng, venue.getString("name"));
+				marker = placeMarker(lat, lng, PICKUP, venue.getString("name"));
 				marker.showInfoWindow();
 			} catch (JSONException e) {
 				Log.e("jason", "JSONException: ", e);
@@ -176,7 +179,7 @@ public class CheckInActivity extends Activity implements LoaderCallbacks<JSONObj
 		if (marker == null) {
 			double lat = mMap.getMyLocation().getLatitude();
 			double lng = mMap.getMyLocation().getLongitude();
-			marker = placeMarker(lat, lng, getResources().getString(R.string.current_location));
+			marker = placeMarker(lat, lng, PICKUP, getResources().getString(R.string.current_location));
 			marker.showInfoWindow();
 		}
 	}
@@ -249,7 +252,7 @@ public class CheckInActivity extends Activity implements LoaderCallbacks<JSONObj
 			mDestination.remove();
 			mDestination = null;
 		}
-		mDestination = placeMarker(point.latitude, point.longitude, CONFIRM);
+		mDestination = placeMarker(point.latitude, point.longitude, CONFIRM, null);
 		mDestination.showInfoWindow();
 	}
 }
