@@ -10,6 +10,7 @@
 #import <MapKit/MapKit.h>
 #import <CoreLocation/CoreLocation.h>
 #import <AddressBookUI/AddressBookUI.h>
+#import <QuartzCore/QuartzCore.h>
 
 #import "FoursquareViewController.h"
 
@@ -29,6 +30,7 @@ NSURLConnectionDelegate>
 @property (strong, nonatomic) UIAlertView *alertView;
 @property (strong, nonatomic) UITableView *placesTable;
 @property (strong, nonatomic) NSArray *placeResults;
+@property (strong, nonatomic) CLPlacemark *selectedPlacemark;
 @property (strong, nonatomic) CLGeocoder *geocoder;
 @property (strong, nonatomic) UIImageView *venueImageView;
 @property (strong, nonatomic) NSMutableData *venueImageData;

@@ -24,7 +24,7 @@ static NSString *kPlacemarkCellId = @"placemarkCellId";
 const double bufferMeters = 4000; //Approx 2.5 mile radius
 
 @interface DestinationViewController () {
-    BOOL userDidInteractWithMap;
+    BOOL regionDidChangeFromSearch;
     double venueLatitude;
     double venueLongitude;
     double destinationLatitude;
@@ -37,85 +37,65 @@ const double bufferMeters = 4000; //Approx 2.5 mile radius
 
 @synthesize mapView, geocoder;
 @synthesize searchBar;
-@synthesize alertView, placeResults, placesTable;
+@synthesize alertView, placeResults, placesTable, selectedPlacemark;
 @synthesize venueImageView, venueImageData;
 @synthesize receivedData, receivedDictionary, vc;
 
 - (void) viewDidLoad
 {
     [super viewDidLoad];
+    self.navigationController.navigationBar.shadowImage = [[UIImage alloc] init];
     
+    /**
+    searchBar.layer.shadowColor = [UIColor darkGrayColor].CGColor;
+    searchBar.layer.shadowOffset = CGSizeMake(0,1);
+    searchBar.layer.shadowRadius = 3.0f;
+    searchBar.layer.shadowOpacity = 0.8f;
+    searchBar.layer.shadowPath = [UIBezierPath bezierPathWithRect:searchBar.bounds].CGPath;
+    searchBar.clipsToBounds = NO;
+     **/
+
     mapView.delegate = self;
     mapView.showsUserLocation = NO;
     mapView.userInteractionEnabled = YES;
-
-    UITapGestureRecognizer *gR = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDropDestination:)];
     
+    UITapGestureRecognizer *gR = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleGestureRecognizer:)];
+    gR.delegate = self;
     [mapView addGestureRecognizer:gR];
 }
 
 - (void) confirmDestination:(id)sender
-{
-    NSLog(@"Hello World");
-    DestinationMKPointAnnotation *destination = (DestinationMKPointAnnotation*)[self getExistingDestinationAnnotations][0];
-    OriginMKPointAnnotation *origin = [self getOriginAnnotation];
-    
-    //NSString *jsonRequest = [NSString stringWithFormat:@"{\"foursquareOauthToken\":\"%@\",\"pickup\":\"{\"%f\"}",self.foursquare.accessToken,origin.coordinate.latitude];
-    //NSLog(@"Request: %@", jsonRequest);
-    
-    NSMutableDictionary *toPOST = [NSMutableDictionary dictionary];
-    [toPOST setObject:self.foursquare.accessToken forKey:@"foursquareOauthToken"];
+{    
+    NSMutableDictionary *dictionaryToPOST = [NSMutableDictionary dictionary];
+    [dictionaryToPOST setObject:self.foursquare.accessToken forKey:@"foursquareOauthToken"];
     
     NSDictionary *pickup = [NSDictionary dictionaryWithObjectsAndKeys:
                             [NSNumber numberWithDouble:venueLatitude],@"lat",
                             [NSNumber numberWithDouble:venueLongitude],@"lng",
                             nil];
-    
-    NSLog(@"pickup = %@",pickup);
-    [toPOST setObject:pickup forKey:@"pickup"];
+    [dictionaryToPOST setObject:pickup forKey:@"pickup"];
     
     NSDictionary *dropoff = [NSDictionary dictionaryWithObjectsAndKeys:
                              [NSNumber numberWithDouble:destinationLatitude],@"lat",
                              [NSNumber numberWithDouble:destinationLongitude],@"lng",
                              nil];
-    
-    [toPOST setObject:dropoff forKey:@"dropoff"];
-    
-    NSLog(@"toPOST = %@",toPOST.description);
+    [dictionaryToPOST setObject:dropoff forKey:@"dropoff"];
         
-    NSURL *url = [NSURL URLWithString:@"http://fourcab.grumpypanda.net/api/checkin/"];
-    
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/api/checkin/",fourcabAPIBaseURL]];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
-    NSData *requestData = [toPOST toJSON];
-    
-    NSLog(@"requestData = %@",[requestData description]);
-    
-    NSError *myError = nil;
-    NSDictionary *res = [NSJSONSerialization JSONObjectWithData:requestData options:NSJSONReadingMutableLeaves error:&myError];
-    NSLog(@"res description = %@",res.description);
-    
+    NSData *requestData = [dictionaryToPOST toJSON];
+        
     [request setHTTPMethod:@"POST"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     [request setValue:[NSString stringWithFormat:@"%d", [requestData length]] forHTTPHeaderField:@"Content-Length"];
     [request setHTTPBody:requestData];
     
-    //NSURLConnection *connection = [NSURLConnection connectionWithRequest:request delegate:self];
-    
-    // Create the request.
-    //NSURLRequest *theRequest=[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.apple.com/"]
-    //                                          cachePolicy:NSURLRequestUseProtocolCachePolicy
-    //                                      timeoutInterval:60.0];
-    // create the connection with the request
-    // and start loading the data
     NSURLConnection *theConnection=[[NSURLConnection alloc] initWithRequest:request delegate:self];
     if (theConnection) {
         NSLog(@"Connected");
-        // Create the NSMutableData to hold the received data.
-        // receivedData is an instance variable declared elsewhere.
         receivedData = [NSMutableData data];
     } else {
         NSLog(@"Connection Failed");
-        // Inform the user that the connection failed.
     }
 
     [self performSegueWithIdentifier:kShowPeopleSegueId sender:self];
@@ -123,44 +103,63 @@ const double bufferMeters = 4000; //Approx 2.5 mile radius
 
 #pragma mark - Gesture Recognizer Events
 
-- (void) handleDropDestination:(UIGestureRecognizer*)sender
+- (void) handleGestureRecognizer:(UIGestureRecognizer*)sender
 {
-    userDidInteractWithMap = YES;
-    
-    //if (sender.state != UIGestureRecognizerStateBegan)
-    //    return;
-    
-    //Remove other annotations added by the user, since there can only be one "lost" or "found" location
-    [self.mapView removeAnnotations:[self getExistingDestinationAnnotations]];
-    
     CGPoint touchPoint = [sender locationInView:self.mapView];
     CLLocationCoordinate2D touchMapCoordinate = [mapView convertPoint:touchPoint toCoordinateFromView:self.mapView];
-    
+    [self handleDropDestination:touchMapCoordinate];
+}
+
+- (void) handleDropDestination:(CLLocationCoordinate2D)coordinate
+{
+    //Remove other annotations added by the user, since there can only be one "lost" or "found" location
+    [self.mapView removeAnnotations:[self getExistingDestinationAnnotations]];
+
     DestinationMKPointAnnotation *annotation = [[DestinationMKPointAnnotation alloc] init];
     annotation.title = @"Destination";
-    annotation.coordinate = touchMapCoordinate;
+    annotation.subtitle = @"Tap to Confirm";
+    annotation.coordinate = coordinate;
     
-    destinationLatitude = touchMapCoordinate.latitude;
-    destinationLongitude = touchMapCoordinate.longitude;
+    destinationLatitude = coordinate.latitude;
+    destinationLongitude = coordinate.longitude;
     
     [mapView addAnnotation:annotation];
-    [mapView selectAnnotation:annotation animated:YES];
 }
 
 #pragma mark - <UIGestureRecognizerDelegate>
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
-    return YES;
+    return NO;
 }
                                    
 #pragma mark - <MKMapViewDelegate>
 
-- (void)mapView:(MKMapView *)mv didUpdateUserLocation:(MKUserLocation *)userLocation
+- (void)mapView:(MKMapView *)mv didAddAnnotationViews:(NSArray *)views
 {
-    // if (userDidInteractWithMap) return;
+    NSLog(@"didAddAnnotationViews");
+
+    //if ([mapView annotations].count == 1)
+    [mapView selectAnnotation:[[mapView annotations] lastObject] animated:YES];
     
-    // [mv setRegion:MKCoordinateRegionMakeWithDistance(userLocation.coordinate, bufferMeters, bufferMeters) animated:YES];
+    NSLog(@"pins = %d",views.count);
+    for (MKPinAnnotationView *pin in views) {
+        if (pin.pinColor == MKPinAnnotationColorRed) {
+            NSLog(@"Red Pin");
+            DestinationMKPointAnnotation *destination = [self getExistingDestinationAnnotations][0];
+            [mapView selectAnnotation:destination animated:YES];
+            
+            regionDidChangeFromSearch = NO;
+        }
+    }
+}
+
+- (void)mapView:(MKMapView *)mv regionDidChangeAnimated:(BOOL)animated
+{
+    if (regionDidChangeFromSearch) {
+        NSLog(@"regionDidChangeFromSearch == YES, dropping pin");
+        [self handleDropDestination:CLLocationCoordinate2DMake(selectedPlacemark.location.coordinate.latitude, selectedPlacemark.location.coordinate.longitude)];
+    }
 }
 
 - (MKAnnotationView *)mapView:(MKMapView *)mv viewForAnnotation:(id < MKAnnotation >)annotation
@@ -279,16 +278,31 @@ const double bufferMeters = 4000; //Approx 2.5 mile radius
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [mapView removeAnnotations:[self getExistingDestinationAnnotations]];
+    //[mapView removeAnnotations:[self getExistingDestinationAnnotations]];
     
-    DestinationMKPointAnnotation *annotation = [[DestinationMKPointAnnotation alloc] init];
-    CLPlacemark *placemark = (CLPlacemark*)[placeResults objectAtIndex:indexPath.row];
-    annotation.coordinate = CLLocationCoordinate2DMake(placemark.location.coordinate.latitude, placemark.location.coordinate.longitude);
-    [self.mapView addAnnotation:annotation];
+    //DestinationMKPointAnnotation *annotation = [[DestinationMKPointAnnotation alloc] init];
+    selectedPlacemark = (CLPlacemark*)[placeResults objectAtIndex:indexPath.row];
+    //annotation.coordinate = CLLocationCoordinate2DMake(placemark.location.coordinate.latitude, placemark.location.coordinate.longitude);
+    //[self.mapView addAnnotation:annotation];
     
-    [mapView setRegion:MKCoordinateRegionMakeWithDistance(annotation.coordinate, bufferMeters, bufferMeters) animated:YES];
-    
-    [alertView dismissWithClickedButtonIndex:0 animated:YES];
+    CLLocation *originLoc = [[CLLocation alloc] initWithLatitude:venueLatitude longitude:venueLongitude];
+    CLLocation *destinationLoc = [[CLLocation alloc] initWithLatitude:selectedPlacemark.location.coordinate.latitude longitude:selectedPlacemark.location.coordinate.longitude];
+    CLLocationDistance distance = [originLoc distanceFromLocation:destinationLoc];
+        
+    if (distance > 1000000.0f) {
+        // This is probably user error and should be handled differently
+        regionDidChangeFromSearch = YES;
+        [mapView setRegion:MKCoordinateRegionMakeWithDistance(CLLocationCoordinate2DMake(selectedPlacemark.location.coordinate.latitude,selectedPlacemark.location.coordinate.longitude),bufferMeters,bufferMeters)
+                  animated:YES];
+    } else {
+        CLLocationCoordinate2D midpoint = CLLocationCoordinate2DMake((originLoc.coordinate.latitude + destinationLoc.coordinate.latitude) / 2, (originLoc.coordinate.longitude + destinationLoc.coordinate.longitude) / 2);
+        
+        regionDidChangeFromSearch = YES;
+        [mapView setRegion:MKCoordinateRegionMakeWithDistance(midpoint,
+                                                              (distance * 2) + 250,
+                                                              (distance * 2) + 250) animated:YES];
+    }
+    [alertView dismissWithClickedButtonIndex:0 animated:NO];
 }
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -389,7 +403,7 @@ const double bufferMeters = 4000; //Approx 2.5 mile radius
     originAnnotation.coordinate = CLLocationCoordinate2DMake(venueLatitude, venueLongitude);
     [mapView addAnnotation:originAnnotation];
     [mapView setRegion:MKCoordinateRegionMakeWithDistance(originAnnotation.coordinate, bufferMeters, bufferMeters) animated:NO];
-    [mapView selectAnnotation:originAnnotation animated:NO];
+    //[mapView selectAnnotation:originAnnotation animated:NO];
 }
 
 @end

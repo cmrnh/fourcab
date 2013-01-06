@@ -20,7 +20,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+        
     foursquare = [[BZFoursquare alloc] initWithClientID:kFoursquareClientId callbackURL:kFoursquareCallbackURL];
     [foursquare setAccessToken:[[NSUserDefaults standardUserDefaults] stringForKey:kFoursquareAccessToken]];
     
@@ -42,11 +42,11 @@
 
 #pragma mark - BZFoursquareRequestDelegate
 
-- (void)requestDidFinishLoading:(BZFoursquareRequest *)request
+- (void)requestDidFinishLoading:(BZFoursquareRequest *)req
 {
-    self.meta = request.meta;
-    self.notifications = request.notifications;
-    self.response = request.response;
+    self.meta = req.meta;
+    self.notifications = req.notifications;
+    self.response = req.response;
     self.request = nil;
     
     //NSLog(@"self.meta = %@",self.meta.description);
@@ -65,15 +65,15 @@
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 }
 
-- (void)request:(BZFoursquareRequest *)request didFailWithError:(NSError *)error
+- (void)request:(BZFoursquareRequest *)req didFailWithError:(NSError *)error
 {
     NSLog(@"%s: %@", __PRETTY_FUNCTION__, error);
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:[[error userInfo] objectForKey:@"errorDetail"] delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil];
     [alertView show];
     
-    self.meta = request.meta;
-    self.notifications = request.notifications;
-    self.response = request.response;
+    self.meta = req.meta;
+    self.notifications = req.notifications;
+    self.response = req.response;
     self.request = nil;
         
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;

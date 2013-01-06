@@ -13,6 +13,9 @@ NSString *const kFoursquareCallbackURL = @"http://fourcab.grumpypanda.net/4cb/";
 
 NSString *const kFoursquareAccessToken = @"foursquare_access_token";
 
+NSString *const fourcabAPIBaseURL = @"http://fourcab.grumpypanda.net";
+
 // Segue
 NSString *const kSignInSegueId = @"signIn";
 NSString *const kShowPeopleSegueId = @"showPeople";
+

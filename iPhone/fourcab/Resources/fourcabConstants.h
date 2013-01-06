@@ -12,6 +12,8 @@ extern NSString *const kFoursquareCallbackURL;
 
 extern NSString *const kFoursquareAccessToken;
 
+extern NSString *const fourcabAPIBaseURL;
+
 // Segue
 extern NSString *const kSignInSegueId;
 extern NSString *const kShowPeopleSegueId;

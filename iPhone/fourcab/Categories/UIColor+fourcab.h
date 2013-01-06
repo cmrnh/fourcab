@@ -11,5 +11,6 @@
 @interface UIColor (fourcab)
 
 + (UIColor*)fourcabBackgroundColor;
++ (UIColor*)fourcabDarkBlueColor;
 
 @end
