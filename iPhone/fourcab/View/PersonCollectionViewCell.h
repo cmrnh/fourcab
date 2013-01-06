@@ -12,5 +12,8 @@
 @interface PersonCollectionViewCell : UICollectionViewCell
 
 @property (strong, nonatomic) UIImageView *imageView;
+@property (strong, nonatomic) UIActivityIndicatorView *spinner;
+
+- (void)setImage:(UIImage*)image;
 
 @end

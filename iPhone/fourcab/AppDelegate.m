@@ -7,12 +7,23 @@
 //
 
 #import "AppDelegate.h"
+#import "AppAppearance.h"
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
+    
+    [AppAppearance setApplicationAppearance];
+    
+    return YES;
+}
+
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+{
+    NSLog(@"url");
+    // return something meaningful
     return YES;
 }
 							
