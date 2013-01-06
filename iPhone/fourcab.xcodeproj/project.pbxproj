@@ -53,6 +53,11 @@
 		7EBACE941699F257009A9C1A /* navigationBar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EBACE8A1699F257009A9C1A /* navigationBar@2x.png */; };
 		7EBACE971699F678009A9C1A /* searchBarBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EBACE951699F678009A9C1A /* searchBarBackground.png */; };
 		7EBACE981699F678009A9C1A /* searchBarBackground@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EBACE961699F678009A9C1A /* searchBarBackground@2x.png */; };
+		7EBACE9B169A27F0009A9C1A /* PersonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EBACE9A169A27F0009A9C1A /* PersonViewController.m */; };
+		7EBACEA1169A3326009A9C1A /* button-highlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EBACE9D169A3325009A9C1A /* button-highlighted.png */; };
+		7EBACEA2169A3326009A9C1A /* button-highlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EBACE9E169A3325009A9C1A /* button-highlighted@2x.png */; };
+		7EBACEA3169A3326009A9C1A /* button-normal.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EBACE9F169A3325009A9C1A /* button-normal.png */; };
+		7EBACEA4169A3326009A9C1A /* button-normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EBACEA0169A3325009A9C1A /* button-normal@2x.png */; };
 		7ECD2B421699D84D0009E1FB /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7ECD2B3E1699D84D0009E1FB /* icon.png */; };
 		7ECD2B431699D84D0009E1FB /* icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7ECD2B3F1699D84D0009E1FB /* icon@2x.png */; };
 		7ECD2B441699D84D0009E1FB /* logo57.png in Resources */ = {isa = PBXBuildFile; fileRef = 7ECD2B401699D84D0009E1FB /* logo57.png */; };
@@ -125,6 +130,12 @@
 		7EBACE8A1699F257009A9C1A /* navigationBar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "navigationBar@2x.png"; path = "Appearance/navigationBar@2x.png"; sourceTree = "<group>"; };
 		7EBACE951699F678009A9C1A /* searchBarBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = searchBarBackground.png; path = Appearance/searchBarBackground.png; sourceTree = "<group>"; };
 		7EBACE961699F678009A9C1A /* searchBarBackground@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "searchBarBackground@2x.png"; path = "Appearance/searchBarBackground@2x.png"; sourceTree = "<group>"; };
+		7EBACE99169A27F0009A9C1A /* PersonViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PersonViewController.h; path = Controllers/PersonViewController.h; sourceTree = "<group>"; };
+		7EBACE9A169A27F0009A9C1A /* PersonViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PersonViewController.m; path = Controllers/PersonViewController.m; sourceTree = "<group>"; };
+		7EBACE9D169A3325009A9C1A /* button-highlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "button-highlighted.png"; path = "Appearance/button-highlighted.png"; sourceTree = "<group>"; };
+		7EBACE9E169A3325009A9C1A /* button-highlighted@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "button-highlighted@2x.png"; path = "Appearance/button-highlighted@2x.png"; sourceTree = "<group>"; };
+		7EBACE9F169A3325009A9C1A /* button-normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "button-normal.png"; path = "Appearance/button-normal.png"; sourceTree = "<group>"; };
+		7EBACEA0169A3325009A9C1A /* button-normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "button-normal@2x.png"; path = "Appearance/button-normal@2x.png"; sourceTree = "<group>"; };
 		7ECD2B3E1699D84D0009E1FB /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
 		7ECD2B3F1699D84D0009E1FB /* icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon@2x.png"; sourceTree = "<group>"; };
 		7ECD2B401699D84D0009E1FB /* logo57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo57.png; sourceTree = "<group>"; };
@@ -176,8 +187,8 @@
 				7E8A01661698953900EDA7AC /* DestinationViewController.m */,
 				7E8A01681698956000EDA7AC /* PeopleViewController.h */,
 				7E8A01691698956100EDA7AC /* PeopleViewController.m */,
-				7E194FE916990C5700D8AD22 /* ConnectionManager.h */,
-				7E194FEA16990C5700D8AD22 /* ConnectionManager.m */,
+				7EBACE99169A27F0009A9C1A /* PersonViewController.h */,
+				7EBACE9A169A27F0009A9C1A /* PersonViewController.m */,
 			);
 			name = "Post-Auth View Controllers";
 			sourceTree = "<group>";
@@ -270,6 +281,7 @@
 		7E8A015E1698906800EDA7AC /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				7EBACE9C169A27F9009A9C1A /* Helper */,
 				7E8A015B1698906400EDA7AC /* SignInViewController.h */,
 				7E8A015C1698906400EDA7AC /* SignInViewController.m */,
 				7E194FCD1698CFB700D8AD22 /* 4SQ Helper View Controller */,
@@ -299,6 +311,10 @@
 				7ECD2B351699CC500009E1FB /* Icon */,
 				7E8A0161169890EC00EDA7AC /* connect-blue.png */,
 				7E8A0162169890EC00EDA7AC /* connect-blue@2x.png */,
+				7EBACE9D169A3325009A9C1A /* button-highlighted.png */,
+				7EBACE9E169A3325009A9C1A /* button-highlighted@2x.png */,
+				7EBACE9F169A3325009A9C1A /* button-normal.png */,
+				7EBACEA0169A3325009A9C1A /* button-normal@2x.png */,
 			);
 			path = Images;
 			sourceTree = "<group>";
@@ -333,6 +349,15 @@
 				7EBACE8A1699F257009A9C1A /* navigationBar@2x.png */,
 			);
 			name = Appearance;
+			sourceTree = "<group>";
+		};
+		7EBACE9C169A27F9009A9C1A /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				7E194FE916990C5700D8AD22 /* ConnectionManager.h */,
+				7E194FEA16990C5700D8AD22 /* ConnectionManager.m */,
+			);
+			name = Helper;
 			sourceTree = "<group>";
 		};
 		7ECD2B351699CC500009E1FB /* Icon */ = {
@@ -422,6 +447,10 @@
 				7EBACE941699F257009A9C1A /* navigationBar@2x.png in Resources */,
 				7EBACE971699F678009A9C1A /* searchBarBackground.png in Resources */,
 				7EBACE981699F678009A9C1A /* searchBarBackground@2x.png in Resources */,
+				7EBACEA1169A3326009A9C1A /* button-highlighted.png in Resources */,
+				7EBACEA2169A3326009A9C1A /* button-highlighted@2x.png in Resources */,
+				7EBACEA3169A3326009A9C1A /* button-normal.png in Resources */,
+				7EBACEA4169A3326009A9C1A /* button-normal@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -466,6 +495,7 @@
 				7E194FEB16990C5700D8AD22 /* ConnectionManager.m in Sources */,
 				7EBACE7B1699E92A009A9C1A /* FloatingActivityIndicatorView.m in Sources */,
 				7EBACE7F1699F15F009A9C1A /* AppAppearance.m in Sources */,
+				7EBACE9B169A27F0009A9C1A /* PersonViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

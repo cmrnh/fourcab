@@ -77,7 +77,7 @@
             </objects>
             <point key="canvasLocation" x="551" y="-1"/>
         </scene>
-        <!--Destination View Controller - Where are you going?-->
+        <!--Destination View Controller-->
         <scene sceneID="2HG-Ys-QEd">
             <objects>
                 <viewController id="Q0o-Fd-DHp" customClass="DestinationViewController" sceneMemberID="viewController">
@@ -104,8 +104,27 @@
                             <constraint firstItem="QLI-B6-eDG" firstAttribute="bottom" secondItem="uU1-Qz-UQx" secondAttribute="bottom" type="default" id="lYB-jM-Psc"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Where are you going?" id="fxM-1k-hyO">
-                        <barButtonItem key="backBarButtonItem" title="Back" id="N7A-cO-BXR"/>
+                    <navigationItem key="navigationItem" id="fxM-1k-hyO">
+                        <nil key="title"/>
+                        <view key="titleView" contentMode="scaleToFill" id="ORv-Hv-RVd">
+                            <rect key="frame" x="60" y="6" width="200" height="33"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <subviews>
+                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Select a Destination" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2kc-rG-E0J">
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                    <fontDescription key="fontDescription" name="Noteworthy-Bold" family="Noteworthy" pointSize="16"/>
+                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstItem="2kc-rG-E0J" firstAttribute="trailing" secondItem="ORv-Hv-RVd" secondAttribute="trailing" type="default" id="BiW-8k-deV"/>
+                                <constraint firstItem="2kc-rG-E0J" firstAttribute="leading" secondItem="ORv-Hv-RVd" secondAttribute="leading" type="default" id="Mtv-8H-NA1"/>
+                                <constraint firstItem="2kc-rG-E0J" firstAttribute="top" secondItem="ORv-Hv-RVd" secondAttribute="top" type="default" id="mK7-fX-SZL"/>
+                                <constraint firstItem="2kc-rG-E0J" firstAttribute="bottom" secondItem="ORv-Hv-RVd" secondAttribute="bottom" type="default" id="soa-EA-nNz"/>
+                            </constraints>
+                        </view>
                     </navigationItem>
                     <connections>
                         <outlet property="mapView" destination="QLI-B6-eDG" id="Vh6-U2-bmn"/>
@@ -117,7 +136,7 @@
             </objects>
             <point key="canvasLocation" x="1008" y="-1"/>
         </scene>
-        <!--People View Controller - People-->
+        <!--People View Controller-->
         <scene sceneID="3rb-J9-0US">
             <objects>
                 <viewController id="kKC-HH-wpy" customClass="PeopleViewController" sceneMemberID="viewController">
@@ -157,14 +176,107 @@
                             <constraint firstItem="UJ2-pF-WGf" firstAttribute="top" secondItem="Gv2-hj-4ae" secondAttribute="top" type="default" id="pIL-NU-P93"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="People" id="A4N-jv-hcE"/>
+                    <navigationItem key="navigationItem" id="A4N-jv-hcE">
+                        <nil key="title"/>
+                        <view key="titleView" contentMode="scaleToFill" id="DxE-6c-0xS">
+                            <rect key="frame" x="67" y="6" width="180" height="33"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <subviews>
+                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="People Looking for Taxis" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3z7-V9-91a">
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="29" id="AyH-4h-sfP"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" name="Noteworthy-Bold" family="Noteworthy" pointSize="16"/>
+                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Near You" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BoX-MG-AD1">
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="21" id="npf-jY-f9E"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" name="Noteworthy-Bold" family="Noteworthy" pointSize="13"/>
+                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstItem="3z7-V9-91a" firstAttribute="top" secondItem="DxE-6c-0xS" secondAttribute="top" constant="-6" id="6U0-xU-ozz"/>
+                                <constraint firstItem="3z7-V9-91a" firstAttribute="leading" secondItem="DxE-6c-0xS" secondAttribute="leading" type="default" id="9iA-y2-KeM"/>
+                                <constraint firstItem="3z7-V9-91a" firstAttribute="trailing" secondItem="DxE-6c-0xS" secondAttribute="trailing" type="default" id="Ccx-qe-iW6"/>
+                                <constraint firstItem="3z7-V9-91a" firstAttribute="trailing" secondItem="BoX-MG-AD1" secondAttribute="trailing" type="default" id="Cgx-Fu-wHH"/>
+                                <constraint firstItem="BoX-MG-AD1" firstAttribute="leading" secondItem="DxE-6c-0xS" secondAttribute="leading" type="default" id="Ffg-oj-0Yk"/>
+                                <constraint firstItem="BoX-MG-AD1" firstAttribute="top" secondItem="DxE-6c-0xS" secondAttribute="top" constant="16" id="kat-pT-5Fa"/>
+                            </constraints>
+                        </view>
+                        <barButtonItem key="rightBarButtonItem" title="Cancel" id="L3D-vx-UGa">
+                            <connections>
+                                <action selector="cancelAction:" destination="kKC-HH-wpy" id="DIM-bF-T3b"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
+                        <outlet property="cancelButton" destination="L3D-vx-UGa" id="OYZ-O4-QOQ"/>
                         <outlet property="collectionView" destination="UJ2-pF-WGf" id="jbZ-uo-oYS"/>
+                        <segue destination="vmW-Pi-Gqj" kind="push" identifier="showPerson" id="qFK-vC-j4y"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5tt-cA-wsu" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1465" y="-1"/>
+        </scene>
+        <!--Person View Controller-->
+        <scene sceneID="Tqd-Oa-Vx6">
+            <objects>
+                <viewController id="vmW-Pi-Gqj" customClass="PersonViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="uSu-5v-7am">
+                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LuL-W1-fHV">
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="300" id="7Uv-mk-uRx"/>
+                                    <constraint firstAttribute="height" constant="300" id="QRZ-nA-3RV"/>
+                                </constraints>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="LuL-W1-fHV" firstAttribute="top" secondItem="uSu-5v-7am" secondAttribute="top" constant="10" id="23H-pM-1qU"/>
+                            <constraint firstItem="LuL-W1-fHV" firstAttribute="centerX" secondItem="uSu-5v-7am" secondAttribute="centerX" type="default" id="6z5-T9-ac3"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="w4p-1G-3v5">
+                        <nil key="title"/>
+                        <view key="titleView" contentMode="scaleToFill" id="ebs-N2-485">
+                            <rect key="frame" x="96" y="6" width="128" height="33"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <subviews>
+                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Person" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aqD-3Q-cYv">
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="21" id="YcH-ga-886"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" name="Noteworthy-Bold" family="Noteworthy" pointSize="17"/>
+                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstItem="aqD-3Q-cYv" firstAttribute="centerY" secondItem="ebs-N2-485" secondAttribute="centerY" type="default" id="2Iw-w5-dU1"/>
+                                <constraint firstItem="aqD-3Q-cYv" firstAttribute="leading" secondItem="ebs-N2-485" secondAttribute="leading" type="default" id="7ue-RD-QJP"/>
+                                <constraint firstItem="aqD-3Q-cYv" firstAttribute="trailing" secondItem="ebs-N2-485" secondAttribute="trailing" type="default" id="hye-f0-F05"/>
+                            </constraints>
+                        </view>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="personImageView" destination="LuL-W1-fHV" id="JtH-fH-2VP"/>
+                        <outlet property="personLabel" destination="aqD-3Q-cYv" id="B85-Ct-AdK"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="OrV-r6-klJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1900" y="-1"/>
         </scene>
     </scenes>
     <resources>
@@ -187,7 +299,18 @@
         <class className="PeopleViewController" superclassName="FoursquareViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/PeopleViewController.h"/>
             <relationships>
+                <relationship kind="action" name="cancelAction:"/>
+                <relationship kind="outlet" name="cancelButton" candidateClass="UIBarButtonItem"/>
                 <relationship kind="outlet" name="collectionView" candidateClass="UICollectionView"/>
+            </relationships>
+        </class>
+        <class className="PersonViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/PersonViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="rideWithAction:"/>
+                <relationship kind="outlet" name="personImageView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="personLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="rideWithButton" candidateClass="UIButton"/>
             </relationships>
         </class>
         <class className="SignInViewController" superclassName="UIViewController">
@@ -207,9 +330,6 @@
         </class>
         <class className="UICollectionViewFlowLayout" superclassName="UICollectionViewLayout">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/UICollectionViewFlowLayout.h"/>
-        </class>
-        <class className="UICollectionViewLayout" superclassName="NSObject">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/UICollectionViewLayout.h"/>
         </class>
     </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

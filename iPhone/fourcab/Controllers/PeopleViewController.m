@@ -9,19 +9,20 @@
 #import "PeopleViewController.h"
 
 #import "PersonCollectionViewCell.h"
+#import "PersonViewController.h"
+#import "ConnectionManager.h"
 
 #import "UIColor+fourcab.h"
 #import "UIView+Framing.h"
-#import "ConnectionManager.h"
+#import "NSDictionary+JSONCategories.h"
 
 NSString *kPersonCellId = @"personCellId";
-NSString *size = @"290x290";
+NSString *size = @"600x600";
 CGFloat cellPadding = 10.f;
 
 @implementation PeopleViewController
 
 NSInteger peopleCount;
-NSString *name;
 @synthesize collectionView, peopleArray, dictionary, spinner, receivedData;
 
 - (void) viewDidLoad
@@ -40,18 +41,38 @@ NSString *name;
 - (void)viewDidLayoutSubviews
 {
     spinner.center = collectionView.center;
-
 }
 
-- (void) processData
+- (IBAction)cancelAction:(id)sender
 {
+    NSDictionary *dictionaryToPOST = [NSDictionary dictionaryWithObject:[[NSUserDefaults standardUserDefaults] stringForKey:kFoursquareAccessToken] forKey:@"foursquareOauthToken"];
     
-    [self processDictionary];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/api/cancel/",fourcabAPIBaseURL]];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+    NSData *requestData = [dictionaryToPOST toJSON];
+    
+    [request setHTTPMethod:@"POST"];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request setValue:[NSString stringWithFormat:@"%d", [requestData length]] forHTTPHeaderField:@"Content-Length"];
+    [request setHTTPBody:requestData];
+    
+    NSURLConnection *theConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+    if (theConnection) {
+        NSLog(@"connnected");
+    } else {
+        NSLog(@"not connected");
+    }
+
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void) processDictionary
 {
-    NSLog(@"processdictionary");
+    if (![dictionary objectForKey:@"waitingCount"]) {
+        NSLog(@"didn't get relevant data back... this is probably a cancellation");
+        return;
+    }
+    
     peopleCount = [[dictionary objectForKey:@"waitingCount"] integerValue];
     
     NSLog(@"waiting count = %@",[dictionary objectForKey:@"waitingCount"]);
@@ -61,42 +82,66 @@ NSString *name;
         NSArray *waitingArray = [dictionary objectForKey:@"waiting"];
         peopleArray = [NSMutableArray arrayWithArray:waitingArray];
         [collectionView reloadData];
+    } else {
+        [NSTimer scheduledTimerWithTimeInterval:5.0
+                                         target:self
+                                       selector:@selector(checkForRides:)
+                                       userInfo:nil
+                                        repeats:NO];
+    }
+}
+
+-(void)checkForRides:(id)sender
+{
+    NSDictionary *dictionaryToPOST = [NSDictionary dictionaryWithObject:[[NSUserDefaults standardUserDefaults] stringForKey:kFoursquareAccessToken] forKey:@"foursquareOauthToken"];
+    
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/api/rides/",fourcabAPIBaseURL]];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+    NSData *requestData = [dictionaryToPOST toJSON];
+    
+    [request setHTTPMethod:@"POST"];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request setValue:[NSString stringWithFormat:@"%d", [requestData length]] forHTTPHeaderField:@"Content-Length"];
+    [request setHTTPBody:requestData];
+    
+    NSURLConnection *theConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+    if (theConnection) {
+        NSLog(@"connnected");
+    } else {
+        NSLog(@"not connected");
     }
 }
 
 #pragma mark - <NSURLConnectionDataDelegate>
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
-    // As chuncks of the image are received, we build our data file
     NSLog(@"received a bit of data");
+    if (!receivedData) receivedData = [NSMutableData data];
     [receivedData appendData:data];
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
-    // All data has been downloaded, now we can set the image in the header image view
-    //[venueImageView setContentMode:UIViewContentModeScaleAspectFit];
-    //venueImageView.image = [UIImage imageWithData:venueImageData];
     NSLog(@"finished receiving data");
-    
-    //NSError *myError = nil;
-    //receivedDictionary = [NSJSONSerialization JSONObjectWithData:receivedData options:NSJSONReadingMutableLeaves error:&myError];
-    //NSLog(@"res description = %@",receivedDictionary.description);
-    
-    //NSLog([NSJSONSerialization isValidJSONObject:receivedData] ? @"VALID" : @"NOT VALID");
+    NSError *myError = nil;
+    dictionary = [NSJSONSerialization JSONObjectWithData:receivedData options:NSJSONReadingAllowFragments error:&myError];
+    receivedData = nil;
+    if (myError) {
+        NSLog(@"receivedData = %@",receivedData.description);
+        NSLog(@"dictionary.description = %@",dictionary.description);
+        NSLog(@"Error = %@", [myError userInfo].description);
+    } else {
+        [self processDictionary];
+        //[collectionView reloadData];
+    }
+
+    NSLog(@"dictionary description = %@",dictionary.description);
 }
 
 #pragma mark - <UICollectionViewDelegate>
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSString *alertString = [NSString stringWithFormat:@"Meet %@ outside by the door", name];
-    
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:alertString
-                                                    message:nil
-                                                   delegate:nil
-                                          cancelButtonTitle:@"Cancel"
-                                          otherButtonTitles:@"Ok",nil];
-    [alert show];
+    [self performSegueWithIdentifier:kShowPersonSegueId sender:self];
 }
 
 #pragma mark - <UICollectionViewDatasource>
@@ -117,28 +162,24 @@ NSString *name;
 {
     PersonCollectionViewCell *cell = [cv dequeueReusableCellWithReuseIdentifier:kPersonCellId forIndexPath:indexPath];
     
-    for (NSDictionary *personWaiting in peopleArray) {
-        name = [personWaiting objectForKey:@"name"];
-        NSString *prefix = [personWaiting objectForKey:@"photo_prefix"];
-        NSString *suffix = [personWaiting objectForKey:@"photo_suffix"];
-        
-        NSString *urlString = [NSString stringWithFormat:@"%@%@%@",prefix,size,suffix];
-        
-        NSURL *url = [NSURL URLWithString:urlString];
-        NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
-
-        ConnectionManager *manager = [[ConnectionManager alloc] initWithImageView:cell.imageView];
-        
-        NSURLConnection *theConnection=[[NSURLConnection alloc] initWithRequest:request delegate:manager];
-        if (theConnection) {
-            NSLog(@"Connected");
-            // Create the NSMutableData to hold the received data.
-            // receivedData is an instance variable declared elsewhere.
-        } else {
-            NSLog(@"Connection Failed");
-            // Inform the user that the connection failed.
-        }
-
+    NSDictionary *personWaiting = (NSDictionary*)peopleArray[indexPath.row];
+    NSString *prefix = [personWaiting objectForKey:@"photo_prefix"];
+    NSString *suffix = [personWaiting objectForKey:@"photo_suffix"];
+    
+    NSString *urlString = [NSString stringWithFormat:@"%@%@%@",prefix,size,suffix];
+    
+    NSLog(@"urlString = %@",urlString);
+    
+    NSURL *url = [NSURL URLWithString:urlString];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+    
+    ConnectionManager *manager = [[ConnectionManager alloc] initWithImageView:cell.imageView];
+    
+    NSURLConnection *theConnection=[[NSURLConnection alloc] initWithRequest:request delegate:manager];
+    if (theConnection) {
+        NSLog(@"Connected");
+    } else {
+        NSLog(@"Connection Failed");
     }
     
     return cell;
@@ -148,8 +189,7 @@ NSString *name;
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    CGFloat singleSide = (self.view.bounds.size.width - cellPadding - cellPadding) / 2;
-    singleSide = 140;
+    CGFloat singleSide = (self.view.bounds.size.width - cellPadding - cellPadding - cellPadding) / 2;
     return CGSizeMake(singleSide, singleSide);
 }
 
@@ -173,7 +213,24 @@ NSString *name;
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
+    NSLog([[segue identifier] isEqualToString:kShowPersonSegueId] ? @"YES" : @"NO");
     
+    if ([[segue identifier] isEqualToString:kShowPersonSegueId]) {
+        NSIndexPath *selectedIndexPath = collectionView.indexPathsForSelectedItems[0];
+        NSDictionary *personWaiting = (NSDictionary*)peopleArray[selectedIndexPath.row];
+        
+        PersonViewController *personViewController = (PersonViewController*)[segue destinationViewController];
+        personViewController.name = [personWaiting objectForKey:@"name"];
+        
+        NSLog(@"name = %@",personViewController.name);
+        
+        PersonCollectionViewCell *cell = (PersonCollectionViewCell*)[collectionView cellForItemAtIndexPath:selectedIndexPath];
+        
+        NSLog(cell.imageView.image ? @"image YES" : @"image NO");
+        
+        [personViewController setImage:cell.imageView.image];
+        [collectionView deselectItemAtIndexPath:selectedIndexPath animated:NO];
+    }
 }
 
 
