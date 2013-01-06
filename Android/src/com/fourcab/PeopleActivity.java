@@ -3,6 +3,7 @@ package com.fourcab;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -44,10 +45,10 @@ public class PeopleActivity extends Activity implements LoaderCallbacks<JSONObje
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
 			mCoords = new double[4];
-			mCoords[0] = extras.getDouble(Constants.LATITUDE);
-			mCoords[1] = extras.getDouble(Constants.LONGITUDE);
-			mCoords[2] = extras.getDouble(Constants.MY_LATITUDE);
-			mCoords[3] = extras.getDouble(Constants.MY_LONGITUDE);
+			mCoords[0] = extras.getDouble(Constants.MY_LATITUDE);
+			mCoords[1] = extras.getDouble(Constants.MY_LONGITUDE);
+			mCoords[2] = extras.getDouble(Constants.LATITUDE);
+			mCoords[3] = extras.getDouble(Constants.LONGITUDE);
 		}
 		
 		mAdapter = new PeopleAdapter(this);
@@ -171,6 +172,13 @@ public class PeopleActivity extends Activity implements LoaderCallbacks<JSONObje
 			if (count >= 1) {
 				mProgress.setVisibility(View.INVISIBLE);
 				mGridView.setVisibility(View.VISIBLE);
+				
+//				JSONArray array = obj.getJSONArray("waiting");
+//				for (int i = 0; i<array.length(); i++) {
+//					JSONObject rider = (JSONObject) array.get(i);
+//					Person p = new Person(rider.getString("name"), rider.getString("url"));
+//				}
+//				mAdapter.setData(list);
 			} else {
 				mProgress.setVisibility(View.INVISIBLE);
 				mGridView.setVisibility(View.INVISIBLE);
