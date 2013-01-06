@@ -7,8 +7,10 @@ var http = require('http'),
 // CONFIGURATION
 var CONFIG = {
 	port: 80,
-	max_pickup_distance_miles: 0.05,  // about one block
-	max_dropoff_distance_miles: 1.0
+	//max_pickup_distance_miles: 0.05,  // about one block
+	max_pickup_distance_miles: 0.15,  // about three blocks - being cautious for demo purposes
+	max_dropoff_distance_miles: 1.0,
+	polling_timeout: 3 * 60 * 1000,   // three minutes
 };
 
 
@@ -21,20 +23,36 @@ g_userdb = {};
 
 // a.lat, a.long, b.lat, b.long are used. Result in miles.
 function calcDistance(a,b) {
-	return 1.0; // XXX
+	// Haversine formula
+	var R = 3963.1696; // miles
+	var dLat = (b.lat-a.lat) * Math.PI / 180.0;
+	var dLon = (b.lng-a.lng) * Math.PI / 180.0;
+	var lat1 = a.lat * Math.PI / 180.0;
+	var lat2 = b.lat * Math.PI / 180.0;
+
+	var x = Math.sin(dLat/2) * Math.sin(dLat/2) +
+	        Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
+	var c = 2 * Math.atan2(Math.sqrt(x), Math.sqrt(1-x)); 
+	var d = R * c;
+
+	console.log("", d, " miles between (", a.lat, ",", a.lng, ") and (", b.lat, ",", b.lng, ")");
+	return d;
 }
 
 
 function sendRides(res, userId) {
 	var dbEntry = g_userdb[userId];
+	var now = Date.now();
 
 	// Construct array of [userId, distance between sources, distance between destinations]
-	// for all other users who want a ride
+	// for all other users who want a ride. Time people out after 3 minutes without
 	var candidates = [];
 	Object.getOwnPropertyNames(g_userdb).forEach(function(otherUserId) {
-		var otherDbEntry = g_userdb[userId];
+		var otherDbEntry = g_userdb[otherUserId];
 
-		if(userId != otherUserId && otherDbEntry.recentPoll) {
+		if(userId != otherUserId
+		&& otherDbEntry.recentPoll
+		&& now - otherDbEntry.recentPoll >= CONFIG.polling_timeout) {
 			candidates.push([
 				otherUserId,
 				calcDistance(dbEntry.pickup, otherDbEntry.pickup),
@@ -82,7 +100,7 @@ app.post('/api/checkin/', function(req,res) {
 		
 		g_userdb[userId] = {
 			pickup: req.body.pickup,
-			dropoff: req.body.pickup,
+			dropoff: req.body.dropoff,
 			recentPoll: Date.now()
 		};
 
@@ -91,6 +109,13 @@ app.post('/api/checkin/', function(req,res) {
 	});
 });
 
+app.post('/api/cancelall/', function(req,res) {
+	g_userdb = {};
+	res.send(200, '200 OK');
+	res.end();
+	console.log('AFTER /api/cancelall/ CALL:', g_userdb);
+});
+	
 app.post('/api/cancel/', function(req,res) {
 	var userId = fsq.userProfileFromOauthSync(req.body.foursquareOauthToken).userId;
 	var dbEntry = g_userdb[userId];
@@ -118,22 +143,18 @@ app.post('/api/rides/', function(req,res) {
 app.listen(CONFIG.port);
 
 // Random testing stuff
+if(0) {
 	console.log("FAKE PROFILE:", fsq.userProfileFromIdSync("testid4"));
 
-fsq.fetchUserWithOauth("VCJX20UMEDND5UU3R2YZFDMUSZ1BNMGWQJJI0JURJAGCBDFF", function(err,res) {
-	console.log("REAL ERR:", err);
-	console.log("REAL RES:", res);
-	console.log("REAL PROFILE:", fsq.userProfileFromIdSync("45028491"));
-});
+	fsq.fetchUserWithOauth("VCJX20UMEDND5UU3R2YZFDMUSZ1BNMGWQJJI0JURJAGCBDFF", function(err,res) {
+		console.log("REAL ERR:", err);
+		console.log("REAL RES:", res);
+		console.log("REAL PROFILE:", fsq.userProfileFromIdSync("45028491"));
+	});
 
-fsq.fetchUserWithOauth("testtoken3", function(err,res) {
-	console.log("FAKE ERR:", err);
-	console.log("FAKE RES:", res);
-});
-
-
-
-
-
-
+	fsq.fetchUserWithOauth("testtoken3", function(err,res) {
+		console.log("FAKE ERR:", err);
+		console.log("FAKE RES:", res);
+	});
+}
 

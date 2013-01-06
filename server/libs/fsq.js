@@ -36,13 +36,23 @@ function insertUserDataIntoCache(oauthToken, response) {
 
 // offline test stubs
 (function() {
+	// totally just random people!
+	var demoImageUrls = [
+		'AHBIQARZWDXFVMWQ', 'RVM0IBY51O34EVDL', '2SAITHVKIAU2BOM5',
+		'EZ00YJSCO4JXG2Y2', 'CJPKVT5FCSWB541A', 'HKSAGKV2ROPQNFOV',
+		'OHMZIILQYH3Q3ARE', 'ARJJXUZJEJYDHEKT', 'BMHLCZ5HXG2SNXMI',
+		'Z1L4R1HNDUYIBJ3I', 'M2KESYDU0FYWAVNB' ];
+
 	for(var i = 1; i < 10; ++i) {
 		insertUserDataIntoCache("testtoken" + i,
 			{ user: {
 				"id": "testid" + i,
 				"firstName" : "Testuser" + i,
 				"lastName": "ABCDEFGHIJKLMNOPQRSTUVWXYZ"[i-1],
-				"photo": { prefix: "http://example.com/", suffix: "/NoPic.jpg" }
+				"photo": {
+					prefix: "https://irs3.4sqi.net/img/user/",
+					suffix: "/" + demoImageUrls[i] + ".jpg"
+				}
 			} });
 	}
 })();
