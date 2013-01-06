@@ -40,7 +40,7 @@ public class CheckInActivity extends Activity implements LoaderCallbacks<JSONObj
 
 	protected static final String TAG = CheckInActivity.class.getSimpleName();
 
-	private static final String CONFIRM = "Confirm?";
+	private static final String CONFIRM = "Confirm Destination?";
 	
 	GoogleMap mMap;
 	MyLocationHandler mMyLocationHandler;
