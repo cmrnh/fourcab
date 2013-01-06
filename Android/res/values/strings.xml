@@ -15,5 +15,6 @@
     <string name="no_rides">Sorry, there are no other riders.</string>
     <string name="no_api_result">Sorry, there is a problem with the server. Try again later.</string>
     <string name="current_location">Current Location</string>
+    <string name="cancel">Cancel</string>
 
 </resources>

@@ -247,4 +247,21 @@ public class PeopleActivity extends Activity implements LoaderCallbacks<JSONObje
 			return result;
 		}
 	}
+	
+	public void onCancelClicked(final View view) {
+		new Thread() {
+			@Override
+			public void run() {
+				FourCabAPI api = new FourCabAPI(PeopleActivity.this);
+				api.cancel();
+				PeopleActivity.this.runOnUiThread(new Runnable() {
+					
+					@Override
+					public void run() {
+						finish();
+					}
+				});
+			}
+		}.start();
+	}
 }

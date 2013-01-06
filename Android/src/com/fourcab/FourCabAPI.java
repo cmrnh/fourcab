@@ -111,4 +111,17 @@ public class FourCabAPI {
 		}
 		return null;
 	}
+	
+	public void cancel() {
+		try {
+			JSONObject holder = new JSONObject();
+			holder.put("foursquareOauthToken", mAuthToken);
+
+			executeHttpPost(API + "/api/cancel/", holder.toString(2));
+		} catch (JSONException e) {
+			Log.e(TAG, "JSONException: ", e);
+		} catch (Exception e) {
+			Log.e(TAG, "Exception: ", e);
+		}
+	}
 }
