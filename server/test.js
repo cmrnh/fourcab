@@ -7,7 +7,64 @@ var http = require('http'),
 // skip tests!
 var populate_only = true;
 
+// Test users 1,2,3,4 move about during testing
+
 var places = {
+	// Test user 5 is always going from here..
+	MARRIOT_MARQUIS_TIMES_SQUARE: {
+		lat: 40.758328,
+		lng: -73.985457,
+		foursquare_venue_id: "439c437bf964a520f02b1fe3",
+		name: "New York Marriott Marquis",
+		street_address: "1535 Broadway at W 46th St."
+	},
+
+	// .. to here
+	COLUMBUS_CIRCLE_TW_CONF_CENTER: {
+		lat: 40.76888396824874,
+		lng: -73.98250075855944,
+		foursquare_venue_id: "4a266ef3f964a520ad7e1fe3",
+		name: "Time Warner Conference Center",
+		street_address: "25 Columbus Circle"
+	},
+
+	// Test user 6 is always going from MARRIOT_MARQUIS_TIMES_SQUARE to
+	// a different location in columbus circle, close to TW Conf Center.
+	COLUMBUS_CIRCLE_SHOPS: {
+		lat: 40.76792357432163,
+		lng: -73.98194432258606,
+		foursquare_venue_id:  "43c922c9f964a520972d1fe3",
+		name: "The Shops at Columbus Circle",
+		street_address: "10 Columbus Circle"
+	},
+
+	// Test user 7 is always going from this airport to the MARRIOT_MARQUIS_TIMES_SQUARE
+	NEWARK_AIRPORT: {
+		lat: 40.68968493541091,
+		lng: -74.17938709259033,
+		foursquare_venue_id: "4459d2f1f964a520d7321fe3",
+		name: "Newark Liberty International Airport (EWR)",
+		street_address: "10 Toler Pl"
+	},
+
+	// Test user 8 is always going from JFK to a different hotel in times square
+	JFK_AIRPORT: {
+		lat: 40.645089355976346,
+		lng: -73.7845230102539,
+		foursquare_venue_id: "43a52546f964a520532c1fe3",
+		name: "John F. Kennedy International Airport (JFK)",
+		street_address: "at JFK Access Rd"
+	},
+
+	PARAMOUNT_HOTEL_TIMES_SQUARE: {
+		lat: 40.75940892619537,
+		lng: -73.98711498854381,
+		foursquare_venue_id: "4adbaf34f964a520012a21e3",
+		name: "Paramount Hotel Times Square New York",
+		street_address: "235 W 46th St."
+	},
+		
+
 	FOURSQUARE_HQ: {
 		lat: 40.724169079279605,
 		lng: -73.99721145629883,
@@ -105,6 +162,31 @@ var SKIP_WHEN_POPULATING = populate_only
 async.series([
 	// reset all state
 	SKIP_WHEN_POPULATING || hit("/api/cancelall/", {}),
+
+	// these users stay put
+	hit("/api/checkin", {
+		foursquareOauthToken: "testtoken5",
+		pickup: places.MARRIOT_MARQUIS_TIMES_SQUARE,
+		dropoff: places.COLUMBUS_CIRCLE_TW_CONF_CENTER,
+	}),
+
+	hit("/api/checkin", {
+		foursquareOauthToken: "testtoken6",
+		pickup: places.MARRIOT_MARQUIS_TIMES_SQUARE,
+		dropoff: places.COLUMBUS_CIRCLE_SHOPS,
+	}),
+
+	hit("/api/checkin", {
+		foursquareOauthToken: "testtoken7",
+		pickup: places.NEWARK_AIRPORT,
+		dropoff: places.MARRIOT_MARQUIS_TIMES_SQUARE,
+	}),
+
+	hit("/api/checkin", {
+		foursquareOauthToken: "testtoken8",
+		pickup: places.JFK_AIRPORT,
+		dropoff: places.PARAMOUNT_HOTEL_TIMES_SQUARE,
+	}),
 
 	// three users start the app..
 	hit("/api/checkin/", {
