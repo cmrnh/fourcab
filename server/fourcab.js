@@ -51,8 +51,8 @@ function sendRides(res, userId) {
 		var otherDbEntry = g_userdb[otherUserId];
 
 		if(userId != otherUserId
-		&& otherDbEntry.recentPoll
-		&& now - otherDbEntry.recentPoll >= CONFIG.polling_timeout) {
+		&& otherDbEntry.recentPoll) {
+//		&& now - otherDbEntry.recentPoll >= CONFIG.polling_timeout) {
 			candidates.push([
 				otherUserId,
 				calcDistance(dbEntry.pickup, otherDbEntry.pickup),
@@ -139,6 +139,9 @@ app.post('/api/rides/', function(req,res) {
 	sendRides(res, userId);
 	console.log('AFTER /api/rides/ CALL:', g_userdb);
 });
+
+app.use('/public', express.static(__dirname + '/public'));
+app.get('/', express.static(__dirname + '/index.html'));
 
 app.listen(CONFIG.port);
 
