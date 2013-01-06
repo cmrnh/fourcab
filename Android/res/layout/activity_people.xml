@@ -43,6 +43,7 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:onClick="onCancelClicked"
+            android:textColor="#FFFFFF"
             android:text="@string/cancel" />
     </LinearLayout>
 

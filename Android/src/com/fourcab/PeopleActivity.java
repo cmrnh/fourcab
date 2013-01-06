@@ -155,7 +155,7 @@ public class PeopleActivity extends Activity implements LoaderCallbacks<JSONObje
 			vh = (ViewHolder) convertView.getTag();
 			Person person = (Person) getItem(position);
 			vh.tv.setText(person.name);
-			mAquery.id(vh.iv).image(person.imageUrl);
+			mAquery.id(vh.iv).image(person.imageUrl, true, true, 0, R.drawable.no_image);
 			
 			return convertView;
 		}
@@ -190,6 +190,8 @@ public class PeopleActivity extends Activity implements LoaderCallbacks<JSONObje
 						Person p = new Person(rider.getString("name"), photo);
 						list.add(p);
 					}
+					if (list.size() == 1) mGridView.setNumColumns(1);
+					else mGridView.setNumColumns(-1); // autofit
 					mAdapter.setData(list);
 				} catch (JSONException e) {
 					Log.e(TAG, "JSONException:", e);
