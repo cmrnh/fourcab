@@ -113,6 +113,10 @@ public class CheckInActivity extends Activity implements LoaderCallbacks<JSONObj
 			Editor editor = prefs.edit();
 			editor.clear();
 			editor.commit();
+			
+			Intent intent = new Intent(this, SignUpActivity.class);
+			startActivity(intent);
+			finish();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
