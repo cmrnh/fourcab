@@ -208,6 +208,11 @@ public class CheckInActivity extends Activity implements LoaderCallbacks<JSONObj
 			LatLng latLng = marker.getPosition();
 			intent.putExtra(Constants.LATITUDE, latLng.latitude);
 			intent.putExtra(Constants.LONGITUDE, latLng.longitude);
+			
+			Location location = mMap.getMyLocation();
+			intent.putExtra(Constants.MY_LATITUDE, location.getLatitude());
+			intent.putExtra(Constants.MY_LONGITUDE, location.getLongitude());
+			
 			startActivity(intent);
 		}
 	}

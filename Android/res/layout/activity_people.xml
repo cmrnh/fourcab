@@ -8,6 +8,26 @@
 	    android:layout_height="match_parent"
 	    android:layout_width="match_parent"
 	    android:numColumns="auto_fit"
+	    android:visibility="invisible"
 	     />
+
+	<ProgressBar
+	    android:id="@+id/progress"
+	    style="?android:attr/progressBarStyleLarge"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_centerHorizontal="true"
+	    android:layout_centerVertical="true"
+	     />
+
+	<TextView
+	    android:id="@+id/no_results_text"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_centerHorizontal="true"
+	    android:layout_centerVertical="true"
+	    android:text="@string/no_rides"
+	    android:textAppearance="?android:attr/textAppearanceLarge"
+	    android:visibility="invisible" />
 	
 </RelativeLayout>
