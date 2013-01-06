@@ -56,6 +56,7 @@ public class FourCabAPI {
 	
 	private JSONObject executeHttpPost(String uri, String params) throws Exception {
 		Log.v("jason", "uri = " + uri);
+		Log.v("jason", params);
 		HttpPost req = new HttpPost(uri);
 		HttpClient client = new DefaultHttpClient();
 		
@@ -84,11 +85,11 @@ public class FourCabAPI {
 			pickup.put("lng", lng);
 			holder.put("pickup", pickup);
 			JSONObject dropoff = new JSONObject();
-			pickup.put("lat", dstLat);
-			pickup.put("lng", dstLng);
+			dropoff.put("lat", dstLat);
+			dropoff.put("lng", dstLng);
 			holder.put("dropoff", dropoff);
 
-			return executeHttpPost(API + "/api/checkin/", holder.toString());
+			return executeHttpPost(API + "/api/checkin/", holder.toString(2));
 		} catch (JSONException e) {
 			Log.e(TAG, "JSONException: ", e);
 		} catch (Exception e) {
@@ -102,7 +103,7 @@ public class FourCabAPI {
 			JSONObject holder = new JSONObject();
 			holder.put("foursquareOauthToken", mAuthToken);
 
-			return executeHttpPost(API + "/api/rides/", holder.toString());
+			return executeHttpPost(API + "/api/rides/", holder.toString(2));
 		} catch (JSONException e) {
 			Log.e(TAG, "JSONException: ", e);
 		} catch (Exception e) {

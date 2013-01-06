@@ -152,7 +152,7 @@ public class CheckInActivity extends Activity implements LoaderCallbacks<JSONObj
 		Marker marker = null;
 		if (jsonObj != null) {
 			try {
-				Log.v("jason", "onLoadFinished: " + jsonObj.toString(2));
+//				Log.v("jason", "onLoadFinished: " + jsonObj.toString(2));
 
 				JSONObject checkin = (JSONObject) jsonObj.getJSONObject("checkins").getJSONArray("items").get(0);
 				JSONObject venue = checkin.getJSONObject("venue");
