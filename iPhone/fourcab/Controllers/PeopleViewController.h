@@ -8,6 +8,20 @@
 
 #import <UIKit/UIKit.h>
 
-@interface PeopleViewController : UIViewController
+#import "FoursquareViewController.h"
+
+@interface PeopleViewController : FoursquareViewController
+<UICollectionViewDataSource,
+UICollectionViewDelegateFlowLayout,
+NSURLConnectionDelegate>
+
+@property (strong, nonatomic) IBOutlet UICollectionView *collectionView;
+@property (strong, nonatomic) NSMutableArray *peopleArray;
+@property (strong, nonatomic) NSDictionary *dictionary;
+@property (strong, nonatomic) NSMutableData *receivedData;
+@property (strong, nonatomic) UIActivityIndicatorView *spinner;
+
+- (void) processData;
+- (void) processDictionary;
 
 @end

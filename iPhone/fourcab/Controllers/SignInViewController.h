@@ -9,5 +9,11 @@
 #import <UIKit/UIKit.h>
 
 @interface SignInViewController : UIViewController
+<UIWebViewDelegate>
+
+@property (strong, nonatomic) IBOutlet UIView *signInView;
+@property (strong, nonatomic) IBOutlet UIWebView *webView;
+
+- (IBAction)connectAction:(id)sender;
 
 @end
