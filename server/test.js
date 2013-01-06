@@ -164,25 +164,25 @@ async.series([
 	SKIP_WHEN_POPULATING || hit("/api/cancelall/", {}),
 
 	// these users stay put
-	hit("/api/checkin", {
+	hit("/api/checkin/", {
 		foursquareOauthToken: "testtoken5",
 		pickup: places.MARRIOT_MARQUIS_TIMES_SQUARE,
 		dropoff: places.COLUMBUS_CIRCLE_TW_CONF_CENTER,
 	}),
 
-	hit("/api/checkin", {
+	hit("/api/checkin/", {
 		foursquareOauthToken: "testtoken6",
 		pickup: places.MARRIOT_MARQUIS_TIMES_SQUARE,
 		dropoff: places.COLUMBUS_CIRCLE_SHOPS,
 	}),
 
-	hit("/api/checkin", {
+	hit("/api/checkin/", {
 		foursquareOauthToken: "testtoken7",
 		pickup: places.NEWARK_AIRPORT,
 		dropoff: places.MARRIOT_MARQUIS_TIMES_SQUARE,
 	}),
 
-	hit("/api/checkin", {
+	hit("/api/checkin/", {
 		foursquareOauthToken: "testtoken8",
 		pickup: places.JFK_AIRPORT,
 		dropoff: places.PARAMOUNT_HOTEL_TIMES_SQUARE,
