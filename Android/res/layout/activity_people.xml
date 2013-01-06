@@ -23,28 +23,34 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:visibility="invisible" />
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/instructions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_margin="10dp"
+        android:gravity="center"
+        android:text="@string/meet_people"
+        android:textSize="22sp"
+        android:visibility="invisible" />
+
+    <GridView
+        android:id="@+id/grid"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical" >
+        android:layout_above="@+id/stop"
+        android:layout_below="@id/instructions"
+        android:numColumns="2"
+        tools:listitem="@layout/people_item" 
+        android:visibility="invisible"
+        />
 
-        <GridView
-            android:id="@+id/grid"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:numColumns="auto_fit"
-            android:visibility="invisible" />
-
-        <Button
-            android:id="@+id/stop"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:onClick="onCancelClicked"
-            android:textColor="#FFFFFF"
-            android:text="@string/cancel" />
-    </LinearLayout>
+    <Button
+        android:id="@+id/stop"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:onClick="onCancelClicked"
+        android:text="@string/cancel" />
 
 </RelativeLayout>

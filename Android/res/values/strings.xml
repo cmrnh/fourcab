@@ -16,5 +16,6 @@
     <string name="no_api_result">Sorry, there is a problem with the server. Try again later.</string>
     <string name="current_location">Current Location</string>
     <string name="cancel">Cancel</string>
+    <string name="meet_people">Meet these people out front:</string>
 
 </resources>
