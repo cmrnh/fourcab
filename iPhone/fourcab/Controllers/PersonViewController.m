@@ -15,7 +15,7 @@
 
 @implementation PersonViewController
 
-@synthesize name, personImageView, personLabel, rideWithButton,image;
+@synthesize name, personImageView, personLabel,image;
 
 - (void)viewDidLoad
 {
