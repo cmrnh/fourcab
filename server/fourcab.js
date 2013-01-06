@@ -6,7 +6,7 @@ var http = require('http'),
 
 // CONFIGURATION
 var CONFIG = {
-	port: 80,
+	port: 7100,
 	//max_pickup_distance_miles: 0.05,  // about one block
 	max_pickup_distance_miles: 0.15,  // about three blocks - being cautious for demo purposes
 	max_dropoff_distance_miles: 1.0,
