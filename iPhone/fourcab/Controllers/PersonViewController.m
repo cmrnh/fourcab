@@ -54,9 +54,4 @@
      **/
 }
 
-- (IBAction)rideWithAction:(id)sender
-{
-    
-}
-
 @end
