@@ -1,42 +1,37 @@
 package com.fourcab;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
-import android.app.LoaderManager.LoaderCallbacks;
-import android.content.AsyncTaskLoader;
 import android.content.Context;
 import android.content.Intent;
-import android.content.Loader;
 import android.content.SharedPreferences;
-import android.content.IntentFilter.AuthorityEntry;
 import android.content.SharedPreferences.Editor;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.Loader;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 
-import com.google.android.gms.maps.CameraUpdate;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
-import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class CheckInActivity extends Activity implements LoaderCallbacks<JSONObject>, OnMarkerClickListener, OnInfoWindowClickListener, OnMapClickListener, OnMapLongClickListener {
+public class CheckInActivity extends SherlockFragmentActivity implements LoaderCallbacks<JSONObject>, OnMarkerClickListener, OnInfoWindowClickListener, OnMapClickListener, OnMapLongClickListener {
 
 	protected static final String TAG = CheckInActivity.class.getSimpleName();
 
@@ -79,7 +74,7 @@ public class CheckInActivity extends Activity implements LoaderCallbacks<JSONObj
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_check_in);
-		mMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
+		mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
 		mMyLocationHandler = new MyLocationHandler(this, mMap);
 
 		if (mMap != null) {
@@ -98,17 +93,18 @@ public class CheckInActivity extends Activity implements LoaderCallbacks<JSONObj
 			
 		}
 
-		getLoaderManager().initLoader(0, null, this);
+		getSupportLoaderManager().initLoader(0, null, this);
 	}
-
+	
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.activity_check_in, menu);
+	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
+		getSupportMenuInflater().inflate(R.menu.activity_check_in, menu);
 		return true;
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onOptionsItemSelected(
+			com.actionbarsherlock.view.MenuItem item) {
 		switch(item.getItemId()) {
 		case R.id.clear_prefs:
 			SharedPreferences prefs = getSharedPreferences(Constants.FOURCAB_PREFS, 0);
@@ -123,7 +119,7 @@ public class CheckInActivity extends Activity implements LoaderCallbacks<JSONObj
 		}
 		return super.onOptionsItemSelected(item);
 	}
-
+	
 	private static void zoomToLocation(GoogleMap map, Location location) {
 		LatLng latlng = new LatLng(location.getLatitude(), location.getLongitude());
 		CameraPosition cameraPosition = new CameraPosition.Builder()

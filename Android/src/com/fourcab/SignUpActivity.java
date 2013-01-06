@@ -1,5 +1,7 @@
 package com.fourcab;
 
+import com.actionbarsherlock.app.SherlockActivity;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -7,12 +9,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-public class SignUpActivity extends Activity {
+public class SignUpActivity extends SherlockActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
+        getSupportActionBar().hide();
     }
     
     @Override
