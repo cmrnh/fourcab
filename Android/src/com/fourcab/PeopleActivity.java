@@ -7,6 +7,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.androidquery.AQuery;
+
 import android.app.Activity;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.AsyncTaskLoader;
@@ -29,6 +31,8 @@ import android.widget.TextView;
 public class PeopleActivity extends Activity implements LoaderCallbacks<JSONObject> {
 
 	private static final String TAG = PeopleActivity.class.getSimpleName();
+	public static final String IMAGE_SIZE = "512";
+	
 	GridView mGridView;
 	PeopleAdapter mAdapter;
 	ProgressBar mProgress;
@@ -54,11 +58,12 @@ public class PeopleActivity extends Activity implements LoaderCallbacks<JSONObje
 		mAdapter = new PeopleAdapter(this);
 		
 //		// Test data
-//		List<Person> people = new ArrayList<Person>();
-//		people.add(new Person("Jason", null));
-//		people.add(new Person("Cameron", null));
-//		people.add(new Person("Andrew", null));
-//		people.add(new Person("Other", null));
+		List<Person> people = new ArrayList<Person>();
+//		String image = "https://irs2.4sqi.net/img/user/512x512/A0UXAHBVGNX0PZV3.jpg";
+//		people.add(new Person("Jason", image));
+//		people.add(new Person("Cameron", image));
+//		people.add(new Person("Andrew", image));
+//		people.add(new Person("Other", image));
 //		mAdapter.setData(people);
 		
 		mGridView = (GridView) findViewById(R.id.grid);
@@ -100,6 +105,7 @@ public class PeopleActivity extends Activity implements LoaderCallbacks<JSONObje
 		List<Person> mPeople = new ArrayList<Person>();
 		LayoutInflater mInflater;
 		Context mContext;
+		AQuery mAquery;
 		
 		public class ViewHolder {
 			public TextView tv;
@@ -107,13 +113,13 @@ public class PeopleActivity extends Activity implements LoaderCallbacks<JSONObje
 			
 			public void populate(Person people) {
 				this.tv.setText(people.name);
-				//TODO: lazy load images
 			}
 		}
 		
 		public PeopleAdapter(Context context) {
 			mContext = context;
 			mInflater = LayoutInflater.from(context);
+			mAquery = new AQuery(context);
 		}
 
 		public void setData(List<Person> list) {
@@ -147,7 +153,9 @@ public class PeopleActivity extends Activity implements LoaderCallbacks<JSONObje
 				convertView.setTag(vh);
 			}
 			vh = (ViewHolder) convertView.getTag();
-			vh.populate((Person) getItem(position));
+			Person person = (Person) getItem(position);
+			vh.tv.setText(person.name);
+			mAquery.id(vh.iv).image(person.imageUrl);
 			
 			return convertView;
 		}
@@ -173,12 +181,19 @@ public class PeopleActivity extends Activity implements LoaderCallbacks<JSONObje
 				mProgress.setVisibility(View.INVISIBLE);
 				mGridView.setVisibility(View.VISIBLE);
 				
-//				JSONArray array = obj.getJSONArray("waiting");
-//				for (int i = 0; i<array.length(); i++) {
-//					JSONObject rider = (JSONObject) array.get(i);
-//					Person p = new Person(rider.getString("name"), rider.getString("url"));
-//				}
-//				mAdapter.setData(list);
+				try {
+					List<Person> list = new ArrayList<PeopleActivity.Person>();
+					JSONArray array = obj.getJSONArray("waiting");
+					for (int i = 0; i<array.length(); i++) {
+						JSONObject rider = (JSONObject) array.get(i);
+						String photo = rider.getString("photo_prefix") + IMAGE_SIZE + "x" + IMAGE_SIZE + rider.getString("photo_suffix");
+						Person p = new Person(rider.getString("name"), photo);
+						list.add(p);
+					}
+					mAdapter.setData(list);
+				} catch (JSONException e) {
+					Log.e(TAG, "JSONException:", e);
+				}
 			} else {
 				mProgress.setVisibility(View.INVISIBLE);
 				mGridView.setVisibility(View.INVISIBLE);
