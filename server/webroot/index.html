@@ -1,0 +1,56 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7 ]> <html lang="nl" class="ie6"> <![endif]-->
+<!--[if IE 7 ]> <html lang="nl" class="ie7"> <![endif]-->
+<!--[if IE 8 ]> <html lang="nl" class="ie8"> <![endif]-->
+<!--[if IE 9 ]> <html lang="nl" class="ie9"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html lang="nl"> <!--<![endif]-->
+<head>
+	<title>fourcab is ride-sharing for taxis!</title>
+
+	<meta charset="utf-8" />
+	<meta name="description" content="fourcab is ride-sharing for taxis. find other foursquare users nearby who want to share a cab" />
+
+	<link rel="icon" type="image/png" href="/favicon.png">
+	<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+	<link rel="stylesheet" type="text/css" media="all" href="css/screen.css" />
+	
+	<!--[if lt IE 9]> <script src="js/html5.js"></script> <![endif]-->
+
+</head>
+<body id="home">
+	<div id="container">
+		<section>
+			<img src="images/placeholder.png" width="480" height="744" alt="fourcab" class="slideshow" />
+		</section>
+		<footer>
+			<nav>
+				<ul>
+					<li><a href="http://twitter.com/fourcab">Twitter</a><li>
+					<li><a href="mailto:contact@fourcab.com">Contact Us</a><li><br>
+				</ul>
+			</nav>
+		</footer>
+	</div>
+
+<script src="js/jquery.js"></script>
+<script src="js/slideshow.js"></script>
+<script src="js/scripts.js"></script>
+
+<script type="text/javascript">
+    $('.slideshow').slideshow(
+    {
+        images : new Array(
+            'images/screen01.png',
+            'images/screen02.png',
+            'images/screen03.png',
+            'images/screen04.png'
+        ),
+        fadeTime : 4000,
+        preload: 1,
+    });
+</script>
+
+</body>
+</html>
