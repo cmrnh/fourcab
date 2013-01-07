@@ -23,7 +23,7 @@ CGFloat cellPadding = 10.f;
 @implementation PeopleViewController
 
 NSInteger peopleCount;
-@synthesize collectionView, peopleArray, dictionary, spinner, receivedData;
+@synthesize collectionView, peopleArray, dictionary, spinner, receivedData, notificationLabel, notificationView;
 
 - (void) viewDidLoad
 {
@@ -43,6 +43,11 @@ NSInteger peopleCount;
     spinner.center = collectionView.center;
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    //[self showNotification:0];
+}
+
 - (IBAction)cancelAction:(id)sender
 {
     NSDictionary *dictionaryToPOST = [NSDictionary dictionaryWithObject:[[NSUserDefaults standardUserDefaults] stringForKey:kFoursquareAccessToken] forKey:@"foursquareOauthToken"];
@@ -58,6 +63,7 @@ NSInteger peopleCount;
     
     NSURLConnection *theConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
     if (theConnection) {
+        receivedData = nil;
         NSLog(@"connnected");
     } else {
         NSLog(@"not connected");
@@ -83,12 +89,52 @@ NSInteger peopleCount;
         peopleArray = [NSMutableArray arrayWithArray:waitingArray];
         [collectionView reloadData];
     } else {
-        [NSTimer scheduledTimerWithTimeInterval:5.0
+        [NSTimer scheduledTimerWithTimeInterval:15.0
                                          target:self
                                        selector:@selector(checkForRides:)
                                        userInfo:nil
                                         repeats:NO];
+        if ([[dictionary objectForKey:@"possibleCount"] integerValue] > 0) {
+            NSLog(@"possibleCount <> 0");
+            [self showNotification:[[dictionary objectForKey:@"possibleCount"] integerValue]];
+        }
     }
+}
+
+- (void) showNotification:(NSInteger)possibleCount
+{
+    notificationView = [[UIView alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width,30)];
+    notificationView.alpha = 0.0f;
+    
+    notificationLabel = [[UILabel alloc] initWithFrame:notificationView.bounds];
+    notificationLabel.font = [UIFont fontWithName:@"Noteworthy-Bold" size:15.0f];
+    notificationLabel.textAlignment = NSTextAlignmentCenter;
+    notificationLabel.backgroundColor = [UIColor colorWithRed:(255.0f/255.f) green:(205.f/255.f) blue:0.0f alpha:1];
+
+    if (possibleCount == 1) {
+        notificationLabel.text = [NSString stringWithFormat:@"1 person nearby has been notified via text!"];
+    } else {
+        notificationLabel.text = [NSString stringWithFormat:@"%d people nearby have been notified via text!",possibleCount];
+    }
+    [notificationView addSubview:notificationLabel];
+    [self.view addSubview:notificationView];
+    
+    [UIView animateWithDuration:1.0f animations:^{
+        notificationView.alpha = 1.0;
+    } completion:^(BOOL finished) {
+    }];
+
+}
+
+- (void) hideNotification
+{
+    if (!notificationView) return;
+    
+    [UIView animateWithDuration:1.0f animations:^{
+        notificationView.alpha = 0.0;
+    } completion:^(BOOL finished) {
+        notificationView.hidden = YES;
+    }];
 }
 
 -(void)checkForRides:(id)sender
@@ -106,6 +152,7 @@ NSInteger peopleCount;
     
     NSURLConnection *theConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
     if (theConnection) {
+        receivedData = nil;
         NSLog(@"connnected");
     } else {
         NSLog(@"not connected");

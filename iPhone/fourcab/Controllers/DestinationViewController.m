@@ -127,6 +127,15 @@ const double bufferMeters = 4000; //Approx 2.5 mile radius
                                    
 #pragma mark - <MKMapViewDelegate>
 
+- (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation
+{
+    // Getting last checkin failed
+    venueLatitude = userLocation.location.coordinate.latitude;
+    venueLongitude = userLocation.location.coordinate.longitude;
+    
+    [super getLastCheckin];
+}
+
 - (void)mapView:(MKMapView *)mv didAddAnnotationViews:(NSArray *)views
 {
     NSLog(@"didAddAnnotationViews");
@@ -362,6 +371,7 @@ const double bufferMeters = 4000; //Approx 2.5 mile radius
 - (void)requestDidFinishLoading:(BZFoursquareRequest *)request
 {
     [super requestDidFinishLoading:request];
+    mapView.showsUserLocation = NO;
     
     NSArray *checkinsItems = (NSArray*)[[self.response objectForKey:@"checkins"] objectForKey:@"items"];
     NSDictionary *mostRecentItem = (NSDictionary*)checkinsItems[0];
@@ -378,6 +388,11 @@ const double bufferMeters = 4000; //Approx 2.5 mile radius
     [mapView addAnnotation:originAnnotation];
     [mapView setRegion:MKCoordinateRegionMakeWithDistance(originAnnotation.coordinate, bufferMeters, bufferMeters) animated:NO];
     //[mapView selectAnnotation:originAnnotation animated:NO];
+}
+
+- (void)request:(BZFoursquareRequest *)request didFailWithError:(NSError *)error
+{
+    mapView.showsUserLocation = YES;
 }
 
 @end

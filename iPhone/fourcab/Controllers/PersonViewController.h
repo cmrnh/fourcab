@@ -15,5 +15,7 @@
 @property (strong, nonatomic) IBOutlet UILabel *personLabel;
 @property (strong, nonatomic) NSString *name;
 @property (strong, nonatomic) UIImage *image;
+@property (strong, nonatomic) IBOutlet UIBarButtonItem *cancelButton;
+- (IBAction)cancelAction:(id)sender;
 
 @end

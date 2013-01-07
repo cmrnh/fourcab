@@ -41,6 +41,7 @@ public class CheckInActivity extends SherlockFragmentActivity implements LoaderC
 	
 	GoogleMap mMap;
 	MyLocationHandler mMyLocationHandler;
+	Marker mOrigin;
 	Marker mDestination;
 
 	static class MyLocationHandler extends Handler {
@@ -154,7 +155,7 @@ public class CheckInActivity extends SherlockFragmentActivity implements LoaderC
 
 	@Override
 	public void onLoadFinished(Loader<JSONObject> loader, JSONObject jsonObj) {
-		Marker marker = null;
+		mOrigin = null;
 		if (jsonObj != null) {
 			try {
 //				Log.v("jason", "onLoadFinished: " + jsonObj.toString(2));
@@ -164,19 +165,19 @@ public class CheckInActivity extends SherlockFragmentActivity implements LoaderC
 				JSONObject location = venue.getJSONObject("location");
 				double lat = location.getDouble("lat");
 				double lng = location.getDouble("lng");
-				marker = placeMarker(lat, lng, PICKUP, venue.getString("name"));
-				marker.showInfoWindow();
+				mOrigin = placeMarker(lat, lng, PICKUP, venue.getString("name"));
+				mOrigin.showInfoWindow();
 			} catch (JSONException e) {
 				Log.e("jason", "JSONException: ", e);
 			}
 		}
 		
 		// If fail to get last checkin, use current location
-		if (marker == null) {
+		if (mOrigin == null) {
 			double lat = mMap.getMyLocation().getLatitude();
 			double lng = mMap.getMyLocation().getLongitude();
-			marker = placeMarker(lat, lng, PICKUP, getResources().getString(R.string.current_location));
-			marker.showInfoWindow();
+			mOrigin = placeMarker(lat, lng, PICKUP, getResources().getString(R.string.current_location));
+			mOrigin.showInfoWindow();
 		}
 	}
 
@@ -225,9 +226,10 @@ public class CheckInActivity extends SherlockFragmentActivity implements LoaderC
 			intent.putExtra(Constants.LATITUDE, latLng.latitude);
 			intent.putExtra(Constants.LONGITUDE, latLng.longitude);
 			
-			Location location = mMap.getMyLocation();
-			intent.putExtra(Constants.MY_LATITUDE, location.getLatitude());
-			intent.putExtra(Constants.MY_LONGITUDE, location.getLongitude());
+//			Location location = mMap.getMyLocation();
+			latLng = mOrigin.getPosition();
+			intent.putExtra(Constants.MY_LATITUDE, latLng.latitude);
+			intent.putExtra(Constants.MY_LONGITUDE, latLng.longitude);
 			
 			startActivity(intent);
 		}

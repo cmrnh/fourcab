@@ -85,7 +85,7 @@
                         <rect key="frame" x="0.0" y="64" width="320" height="416"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="QPJ-tr-HxS">
+                            <searchBar contentMode="redraw" placeholder="Where are you going?" translatesAutoresizingMaskIntoConstraints="NO" id="QPJ-tr-HxS">
                                 <textInputTraits key="textInputTraits"/>
                                 <connections>
                                     <outlet property="delegate" destination="Q0o-Fd-DHp" id="QEW-h3-W6y"/>
@@ -178,35 +178,30 @@
                     </view>
                     <navigationItem key="navigationItem" id="A4N-jv-hcE">
                         <nil key="title"/>
+                        <barButtonItem key="leftBarButtonItem" style="plain" id="YWu-HQ-bBn">
+                            <view key="customView" contentMode="scaleToFill" id="WH0-bY-1kF">
+                                <rect key="frame" x="5" y="5" width="10" height="33"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </view>
+                            <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        </barButtonItem>
                         <view key="titleView" contentMode="scaleToFill" id="DxE-6c-0xS">
                             <rect key="frame" x="67" y="6" width="180" height="33"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="People Looking for Taxis" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3z7-V9-91a">
-                                    <constraints>
-                                        <constraint firstAttribute="height" constant="29" id="AyH-4h-sfP"/>
-                                    </constraints>
                                     <fontDescription key="fontDescription" name="Noteworthy-Bold" family="Noteworthy" pointSize="16"/>
-                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
-                                    <nil key="highlightedColor"/>
-                                </label>
-                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Near You" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BoX-MG-AD1">
-                                    <constraints>
-                                        <constraint firstAttribute="height" constant="21" id="npf-jY-f9E"/>
-                                    </constraints>
-                                    <fontDescription key="fontDescription" name="Noteworthy-Bold" family="Noteworthy" pointSize="13"/>
                                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                             </subviews>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <constraints>
-                                <constraint firstItem="3z7-V9-91a" firstAttribute="top" secondItem="DxE-6c-0xS" secondAttribute="top" constant="-6" id="6U0-xU-ozz"/>
                                 <constraint firstItem="3z7-V9-91a" firstAttribute="leading" secondItem="DxE-6c-0xS" secondAttribute="leading" type="default" id="9iA-y2-KeM"/>
-                                <constraint firstItem="3z7-V9-91a" firstAttribute="trailing" secondItem="DxE-6c-0xS" secondAttribute="trailing" type="default" id="Ccx-qe-iW6"/>
-                                <constraint firstItem="3z7-V9-91a" firstAttribute="trailing" secondItem="BoX-MG-AD1" secondAttribute="trailing" type="default" id="Cgx-Fu-wHH"/>
-                                <constraint firstItem="BoX-MG-AD1" firstAttribute="leading" secondItem="DxE-6c-0xS" secondAttribute="leading" type="default" id="Ffg-oj-0Yk"/>
-                                <constraint firstItem="BoX-MG-AD1" firstAttribute="top" secondItem="DxE-6c-0xS" secondAttribute="top" constant="16" id="kat-pT-5Fa"/>
+                                <constraint firstItem="3z7-V9-91a" firstAttribute="trailing" secondItem="DxE-6c-0xS" secondAttribute="trailing" type="default" id="mDA-zj-XBy"/>
+                                <constraint firstItem="3z7-V9-91a" firstAttribute="bottom" secondItem="DxE-6c-0xS" secondAttribute="bottom" type="default" id="mN7-lk-1OP"/>
+                                <constraint firstItem="3z7-V9-91a" firstAttribute="top" secondItem="DxE-6c-0xS" secondAttribute="top" type="default" id="xn4-2F-pML"/>
                             </constraints>
                         </view>
                         <barButtonItem key="rightBarButtonItem" title="Cancel" id="L3D-vx-UGa">
@@ -268,8 +263,14 @@
                                 <constraint firstItem="aqD-3Q-cYv" firstAttribute="trailing" secondItem="ebs-N2-485" secondAttribute="trailing" type="default" id="hye-f0-F05"/>
                             </constraints>
                         </view>
+                        <barButtonItem key="rightBarButtonItem" title="Cancel" id="eww-Jc-r9A">
+                            <connections>
+                                <action selector="cancelAction:" destination="vmW-Pi-Gqj" id="fir-xe-2lK"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="cancelButton" destination="eww-Jc-r9A" id="QBY-s3-gxa"/>
                         <outlet property="personImageView" destination="LuL-W1-fHV" id="JtH-fH-2VP"/>
                         <outlet property="personLabel" destination="aqD-3Q-cYv" id="B85-Ct-AdK"/>
                     </connections>
@@ -302,15 +303,17 @@
                 <relationship kind="action" name="cancelAction:"/>
                 <relationship kind="outlet" name="cancelButton" candidateClass="UIBarButtonItem"/>
                 <relationship kind="outlet" name="collectionView" candidateClass="UICollectionView"/>
+                <relationship kind="outlet" name="notificationLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="notificationView" candidateClass="UIView"/>
             </relationships>
         </class>
         <class className="PersonViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/PersonViewController.h"/>
             <relationships>
-                <relationship kind="action" name="rideWithAction:"/>
+                <relationship kind="action" name="cancelAction:"/>
+                <relationship kind="outlet" name="cancelButton" candidateClass="UIBarButtonItem"/>
                 <relationship kind="outlet" name="personImageView" candidateClass="UIImageView"/>
                 <relationship kind="outlet" name="personLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="rideWithButton" candidateClass="UIButton"/>
             </relationships>
         </class>
         <class className="SignInViewController" superclassName="UIViewController">
@@ -330,6 +333,9 @@
         </class>
         <class className="UICollectionViewFlowLayout" superclassName="UICollectionViewLayout">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/UICollectionViewFlowLayout.h"/>
+        </class>
+        <class className="UICollectionViewLayout" superclassName="NSObject">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/UICollectionViewLayout.h"/>
         </class>
     </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

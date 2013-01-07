@@ -19,4 +19,6 @@
 @property (strong, nonatomic) NSArray *notifications;
 @property (strong, nonatomic) NSDictionary *response;
 
+- (void)getLastCheckin;
+
 @end

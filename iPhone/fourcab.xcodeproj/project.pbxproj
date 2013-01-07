@@ -58,6 +58,10 @@
 		7EBACEA2169A3326009A9C1A /* button-highlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EBACE9E169A3325009A9C1A /* button-highlighted@2x.png */; };
 		7EBACEA3169A3326009A9C1A /* button-normal.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EBACE9F169A3325009A9C1A /* button-normal.png */; };
 		7EBACEA4169A3326009A9C1A /* button-normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EBACEA0169A3325009A9C1A /* button-normal@2x.png */; };
+		7EBACEAD169A3AF0009A9C1A /* cancelBarButtonItem-highlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EBACEA9169A3AF0009A9C1A /* cancelBarButtonItem-highlighted.png */; };
+		7EBACEAE169A3AF0009A9C1A /* cancelBarButtonItem-highlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EBACEAA169A3AF0009A9C1A /* cancelBarButtonItem-highlighted@2x.png */; };
+		7EBACEAF169A3AF0009A9C1A /* cancelBarButtonItem-normal.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EBACEAB169A3AF0009A9C1A /* cancelBarButtonItem-normal.png */; };
+		7EBACEB0169A3AF0009A9C1A /* cancelBarButtonItem-normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EBACEAC169A3AF0009A9C1A /* cancelBarButtonItem-normal@2x.png */; };
 		7ECD2B421699D84D0009E1FB /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7ECD2B3E1699D84D0009E1FB /* icon.png */; };
 		7ECD2B431699D84D0009E1FB /* icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7ECD2B3F1699D84D0009E1FB /* icon@2x.png */; };
 		7ECD2B441699D84D0009E1FB /* logo57.png in Resources */ = {isa = PBXBuildFile; fileRef = 7ECD2B401699D84D0009E1FB /* logo57.png */; };
@@ -136,6 +140,10 @@
 		7EBACE9E169A3325009A9C1A /* button-highlighted@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "button-highlighted@2x.png"; path = "Appearance/button-highlighted@2x.png"; sourceTree = "<group>"; };
 		7EBACE9F169A3325009A9C1A /* button-normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "button-normal.png"; path = "Appearance/button-normal.png"; sourceTree = "<group>"; };
 		7EBACEA0169A3325009A9C1A /* button-normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "button-normal@2x.png"; path = "Appearance/button-normal@2x.png"; sourceTree = "<group>"; };
+		7EBACEA9169A3AF0009A9C1A /* cancelBarButtonItem-highlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "cancelBarButtonItem-highlighted.png"; path = "Appearance/cancelBarButtonItem-highlighted.png"; sourceTree = "<group>"; };
+		7EBACEAA169A3AF0009A9C1A /* cancelBarButtonItem-highlighted@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "cancelBarButtonItem-highlighted@2x.png"; path = "Appearance/cancelBarButtonItem-highlighted@2x.png"; sourceTree = "<group>"; };
+		7EBACEAB169A3AF0009A9C1A /* cancelBarButtonItem-normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "cancelBarButtonItem-normal.png"; path = "Appearance/cancelBarButtonItem-normal.png"; sourceTree = "<group>"; };
+		7EBACEAC169A3AF0009A9C1A /* cancelBarButtonItem-normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "cancelBarButtonItem-normal@2x.png"; path = "Appearance/cancelBarButtonItem-normal@2x.png"; sourceTree = "<group>"; };
 		7ECD2B3E1699D84D0009E1FB /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
 		7ECD2B3F1699D84D0009E1FB /* icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon@2x.png"; sourceTree = "<group>"; };
 		7ECD2B401699D84D0009E1FB /* logo57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo57.png; sourceTree = "<group>"; };
@@ -335,6 +343,10 @@
 		7EBACE801699F242009A9C1A /* Appearance */ = {
 			isa = PBXGroup;
 			children = (
+				7EBACEA9169A3AF0009A9C1A /* cancelBarButtonItem-highlighted.png */,
+				7EBACEAA169A3AF0009A9C1A /* cancelBarButtonItem-highlighted@2x.png */,
+				7EBACEAB169A3AF0009A9C1A /* cancelBarButtonItem-normal.png */,
+				7EBACEAC169A3AF0009A9C1A /* cancelBarButtonItem-normal@2x.png */,
 				7EBACE951699F678009A9C1A /* searchBarBackground.png */,
 				7EBACE961699F678009A9C1A /* searchBarBackground@2x.png */,
 				7EBACE811699F257009A9C1A /* backButton-highlighted.png */,
@@ -451,6 +463,10 @@
 				7EBACEA2169A3326009A9C1A /* button-highlighted@2x.png in Resources */,
 				7EBACEA3169A3326009A9C1A /* button-normal.png in Resources */,
 				7EBACEA4169A3326009A9C1A /* button-normal@2x.png in Resources */,
+				7EBACEAD169A3AF0009A9C1A /* cancelBarButtonItem-highlighted.png in Resources */,
+				7EBACEAE169A3AF0009A9C1A /* cancelBarButtonItem-highlighted@2x.png in Resources */,
+				7EBACEAF169A3AF0009A9C1A /* cancelBarButtonItem-normal.png in Resources */,
+				7EBACEB0169A3AF0009A9C1A /* cancelBarButtonItem-normal@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

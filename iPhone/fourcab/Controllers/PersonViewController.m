@@ -12,6 +12,7 @@
 
 #import "UIColor+fourcab.h"
 #import "UIView+Framing.h"
+#import "NSDictionary+JSONCategories.h"
 
 @implementation PersonViewController
 
@@ -52,6 +53,41 @@
     [rideWithButton setTitle:@"I'd share a cab with this dude" forState:UIControlStateNormal];
     [rideWithButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
      **/
+}
+
+- (IBAction)cancelAction:(id)sender
+{
+    NSDictionary *dictionaryToPOST = [NSDictionary dictionaryWithObject:[[NSUserDefaults standardUserDefaults] stringForKey:kFoursquareAccessToken] forKey:@"foursquareOauthToken"];
+    
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/api/cancel/",fourcabAPIBaseURL]];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+    NSData *requestData = [dictionaryToPOST toJSON];
+    
+    [request setHTTPMethod:@"POST"];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request setValue:[NSString stringWithFormat:@"%d", [requestData length]] forHTTPHeaderField:@"Content-Length"];
+    [request setHTTPBody:requestData];
+    
+    NSURLConnection *theConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+    if (theConnection) {
+        NSLog(@"connnected");
+    } else {
+        NSLog(@"not connected");
+    }
+    
+    [self.navigationController popToRootViewControllerAnimated:YES];
+}
+
+#pragma mark - <NSURLConnectionDataDelegate>
+
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
+{
+    NSLog(@"received a bit of data");
+}
+
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection
+{
+    NSLog(@"finished receiving data");
 }
 
 @end
