@@ -289,8 +289,9 @@ app.post('/4push/', function(req,res) {
 });
 
 
-app.use('/public', express.static(__dirname + '/public'));
-app.get('/', express.static(__dirname + '/index.html'));
+//app.get('/public', express.static(__dirname + '/public'));
+//app.get('/', express.static(__dirname + '/index.html'));
+app.use(express.static(__dirname + '/webroot'));
 
 
 
