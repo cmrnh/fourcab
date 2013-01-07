@@ -16,6 +16,7 @@ import android.content.Context;
 import android.content.Loader;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -25,6 +26,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -34,6 +36,7 @@ public class PeopleActivity extends Activity implements LoaderCallbacks<JSONObje
 	public static final String IMAGE_SIZE = "512";
 	
 	GridView mGridView;
+	TextView mInstructions;
 	PeopleAdapter mAdapter;
 	ProgressBar mProgress;
 	TextView mNoResultsView;
@@ -57,28 +60,13 @@ public class PeopleActivity extends Activity implements LoaderCallbacks<JSONObje
 		
 		mAdapter = new PeopleAdapter(this);
 		
-//		// Test data
-		List<Person> people = new ArrayList<Person>();
-//		String image = "https://irs2.4sqi.net/img/user/512x512/A0UXAHBVGNX0PZV3.jpg";
-//		people.add(new Person("Jason", image));
-//		people.add(new Person("Cameron", image));
-//		people.add(new Person("Andrew", image));
-//		people.add(new Person("Other", image));
-//		mAdapter.setData(people);
-		
 		mGridView = (GridView) findViewById(R.id.grid);
 		mGridView.setAdapter(mAdapter);
 		mProgress = (ProgressBar) findViewById(R.id.progress);
 		mNoResultsView = (TextView) findViewById(R.id.no_results_text);
+		mInstructions = (TextView) findViewById(R.id.instructions);
 		
 		getLoaderManager().initLoader(0, null, this);
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.activity_people, menu);
-		return true;
 	}
 
 	@Override
@@ -155,7 +143,7 @@ public class PeopleActivity extends Activity implements LoaderCallbacks<JSONObje
 			vh = (ViewHolder) convertView.getTag();
 			Person person = (Person) getItem(position);
 			vh.tv.setText(person.name);
-			mAquery.id(vh.iv).image(person.imageUrl, true, true, 0, R.drawable.no_image);
+			mAquery.id(vh.iv).image(person.imageUrl);
 			
 			return convertView;
 		}
@@ -164,6 +152,10 @@ public class PeopleActivity extends Activity implements LoaderCallbacks<JSONObje
 
 	@Override
 	public Loader<JSONObject> onCreateLoader(int id, Bundle args) {
+		mNoResultsView.setVisibility(View.INVISIBLE);
+		mProgress.setVisibility(View.VISIBLE);
+		mGridView.setVisibility(View.INVISIBLE);
+		mInstructions.setVisibility(View.INVISIBLE);
 		return new PeopleLoader(this, mCoords);
 	}
 
@@ -180,6 +172,7 @@ public class PeopleActivity extends Activity implements LoaderCallbacks<JSONObje
 			if (count >= 1) {
 				mProgress.setVisibility(View.INVISIBLE);
 				mGridView.setVisibility(View.VISIBLE);
+				mInstructions.setVisibility(View.VISIBLE);
 				
 				try {
 					List<Person> list = new ArrayList<PeopleActivity.Person>();
@@ -199,15 +192,29 @@ public class PeopleActivity extends Activity implements LoaderCallbacks<JSONObje
 			} else {
 				mProgress.setVisibility(View.INVISIBLE);
 				mGridView.setVisibility(View.INVISIBLE);
+				mInstructions.setVisibility(View.INVISIBLE);
 				mNoResultsView.setVisibility(View.VISIBLE);
 				mNoResultsView.setText(R.string.no_rides);
 			}
 		} else {
 			mProgress.setVisibility(View.INVISIBLE);
 			mGridView.setVisibility(View.INVISIBLE);
+			mInstructions.setVisibility(View.INVISIBLE);
 			mNoResultsView.setVisibility(View.VISIBLE);
 			mNoResultsView.setText(R.string.no_api_result);
 		}
+		
+//		// Test data
+//		List<Person> people = new ArrayList<Person>();
+//		String image = "https://irs2.4sqi.net/img/user/512x512/A0UXAHBVGNX0PZV3.jpg";
+//		people.add(new Person("Jason", image));
+//		people.add(new Person("Cameron", image));
+//		people.add(new Person("Andrew", image));
+//		people.add(new Person("Other", image));
+//		mAdapter.setData(people);
+//		mGridView.setVisibility(View.VISIBLE);
+//		mInstructions.setVisibility(View.VISIBLE);
+//		mNoResultsView.setVisibility(View.INVISIBLE);
 	}
 
 	@Override

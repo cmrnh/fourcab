@@ -44,7 +44,7 @@ const double bufferMeters = 4000; //Approx 2.5 mile radius
 - (void) viewDidLoad
 {
     [super viewDidLoad];
-    self.navigationController.navigationBar.shadowImage = [[UIImage alloc] init];
+    //self.navigationController.navigationBar.shadowImage = [[UIImage alloc] init];
     
     /**
     searchBar.layer.shadowColor = [UIColor darkGrayColor].CGColor;
@@ -90,15 +90,7 @@ const double bufferMeters = 4000; //Approx 2.5 mile radius
     [request setValue:[NSString stringWithFormat:@"%d", [requestData length]] forHTTPHeaderField:@"Content-Length"];
     [request setHTTPBody:requestData];
     
-    NSURLConnection *theConnection=[[NSURLConnection alloc] initWithRequest:request delegate:self];
-    if (theConnection) {
-        NSLog(@"Connected");
-        receivedData = [NSMutableData data];
-    } else {
-        NSLog(@"Connection Failed");
-    }
-
-    [self performSegueWithIdentifier:kShowPeopleSegueId sender:self];
+    [self performSegueWithIdentifier:kShowPeopleSegueId sender:request];
 }
 
 #pragma mark - Gesture Recognizer Events
@@ -174,7 +166,6 @@ const double bufferMeters = 4000; //Approx 2.5 mile radius
         [annotationView setCanShowCallout:YES];
         
         UIButton *confirmButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
-        //[confirmButton setTitle:@"Confirm" forState:UIControlStateNormal];
         [confirmButton addTarget:self action:@selector(confirmDestination:) forControlEvents:UIControlEventTouchUpInside];
         annotationView.rightCalloutAccessoryView = confirmButton;
 
@@ -193,31 +184,63 @@ const double bufferMeters = 4000; //Approx 2.5 mile radius
     return nil;
 }
 
-#pragma mark - <NSURLConnectionDataDelegate>
+#pragma mark - Map Helpers
 
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
-    // As chuncks of the image are received, we build our data file
-    NSLog(@"received a bit of data");
-    [receivedData appendData:data];
+- (NSArray*) getExistingDestinationAnnotations
+{
+    if (mapView.annotations == nil)
+        return nil;
+    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.class.description == 'DestinationMKPointAnnotation'"];
+    return [mapView.annotations filteredArrayUsingPredicate:predicate];
 }
 
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
-    // All data has been downloaded, now we can set the image in the header image view
-    //[venueImageView setContentMode:UIViewContentModeScaleAspectFit];
-    //venueImageView.image = [UIImage imageWithData:venueImageData];
-    NSLog(@"finished receiving data");
+- (OriginMKPointAnnotation*) getOriginAnnotation
+{
+    if (mapView.annotations == nil)
+        return nil;
     
-    NSError *myError = nil;
-    receivedDictionary = [NSJSONSerialization JSONObjectWithData:receivedData options:NSJSONReadingMutableLeaves error:&myError];
-    NSLog(@"res description = %@",receivedDictionary.description);
-    
-    if (vc) {
-        vc.dictionary = receivedDictionary;
-        [vc processDictionary];
-        [vc.collectionView reloadData];
-    }
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.class.description == 'OriginMKPointAnnotation'"];
+    return [mapView.annotations filteredArrayUsingPredicate:predicate][0];
+}
 
-    //NSLog([NSJSONSerialization isValidJSONObject:receivedData] ? @"VALID" : @"NOT VALID");
+- (void)choosePlaceFromPlacemarks:(NSArray*)placemarks
+{
+    placeResults = placemarks;
+    
+    if (placemarks.count > 1) {
+        placesTable = [[UITableView alloc] initWithFrame:CGRectMake(10, 45, 264, 130) style:UITableViewStylePlain];
+        placesTable.delegate = self;
+        placesTable.dataSource = self;
+        
+        alertView = [[UIAlertView alloc] initWithTitle:@"Did you mean... " message:@"\n\n\n\n\n\n" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:nil];
+        [alertView addSubview:placesTable];
+        [alertView show];
+    } else {
+        selectedPlacemark = (CLPlacemark*)placemarks[0];
+        [self showSelectedPlacemarkOnMap];
+    }
+}
+
+- (void)showSelectedPlacemarkOnMap
+{
+    CLLocation *originLoc = [[CLLocation alloc] initWithLatitude:venueLatitude longitude:venueLongitude];
+    CLLocation *destinationLoc = [[CLLocation alloc] initWithLatitude:selectedPlacemark.location.coordinate.latitude longitude:selectedPlacemark.location.coordinate.longitude];
+    CLLocationDistance distance = [originLoc distanceFromLocation:destinationLoc];
+    
+    if (distance > 1000000.0f) {
+        // This is probably user error and should be handled differently
+        regionDidChangeFromSearch = YES;
+        [mapView setRegion:MKCoordinateRegionMakeWithDistance(CLLocationCoordinate2DMake(selectedPlacemark.location.coordinate.latitude,selectedPlacemark.location.coordinate.longitude),bufferMeters,bufferMeters)
+                  animated:YES];
+    } else {
+        CLLocationCoordinate2D midpoint = CLLocationCoordinate2DMake((originLoc.coordinate.latitude + destinationLoc.coordinate.latitude) / 2, (originLoc.coordinate.longitude + destinationLoc.coordinate.longitude) / 2);
+        
+        regionDidChangeFromSearch = YES;
+        [mapView setRegion:MKCoordinateRegionMakeWithDistance(midpoint,
+                                                              (distance * 2) + 250,
+                                                              (distance * 2) + 250) animated:YES];
+    }
 }
 
 #pragma mark - <UISearchBarDelegate>
@@ -278,30 +301,8 @@ const double bufferMeters = 4000; //Approx 2.5 mile radius
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    //[mapView removeAnnotations:[self getExistingDestinationAnnotations]];
-    
-    //DestinationMKPointAnnotation *annotation = [[DestinationMKPointAnnotation alloc] init];
     selectedPlacemark = (CLPlacemark*)[placeResults objectAtIndex:indexPath.row];
-    //annotation.coordinate = CLLocationCoordinate2DMake(placemark.location.coordinate.latitude, placemark.location.coordinate.longitude);
-    //[self.mapView addAnnotation:annotation];
-    
-    CLLocation *originLoc = [[CLLocation alloc] initWithLatitude:venueLatitude longitude:venueLongitude];
-    CLLocation *destinationLoc = [[CLLocation alloc] initWithLatitude:selectedPlacemark.location.coordinate.latitude longitude:selectedPlacemark.location.coordinate.longitude];
-    CLLocationDistance distance = [originLoc distanceFromLocation:destinationLoc];
-        
-    if (distance > 1000000.0f) {
-        // This is probably user error and should be handled differently
-        regionDidChangeFromSearch = YES;
-        [mapView setRegion:MKCoordinateRegionMakeWithDistance(CLLocationCoordinate2DMake(selectedPlacemark.location.coordinate.latitude,selectedPlacemark.location.coordinate.longitude),bufferMeters,bufferMeters)
-                  animated:YES];
-    } else {
-        CLLocationCoordinate2D midpoint = CLLocationCoordinate2DMake((originLoc.coordinate.latitude + destinationLoc.coordinate.latitude) / 2, (originLoc.coordinate.longitude + destinationLoc.coordinate.longitude) / 2);
-        
-        regionDidChangeFromSearch = YES;
-        [mapView setRegion:MKCoordinateRegionMakeWithDistance(midpoint,
-                                                              (distance * 2) + 250,
-                                                              (distance * 2) + 250) animated:YES];
-    }
+    [self showSelectedPlacemarkOnMap];
     [alertView dismissWithClickedButtonIndex:0 animated:NO];
 }
 
@@ -340,47 +341,20 @@ const double bufferMeters = 4000; //Approx 2.5 mile radius
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    NSLog(@"segue identifer = %@",segue.identifier);
-    
-    if (segue.identifier == @"showPeople") {
-        NSLog(@"hello");
+    if ([segue.identifier isEqualToString:kShowPeopleSegueId]) {
+        NSMutableURLRequest *request = (NSMutableURLRequest*)sender;
+
+        PeopleViewController *peopleViewController = (PeopleViewController*)[segue destinationViewController];
+        
+        NSURLConnection *theConnection = [[NSURLConnection alloc] initWithRequest:request delegate:peopleViewController];
+        
+        if (theConnection) {
+            NSLog(@"Connected");
+            receivedData = [NSMutableData data];
+        } else {
+            NSLog(@"Connection Failed");
+        }
     }
-    
-    PeopleViewController *peopleViewController = (PeopleViewController*)[segue destinationViewController];
-    
-    vc = peopleViewController;
-}
-
-#pragma mark - Helper
-
-- (NSArray*) getExistingDestinationAnnotations
-{
-    if (mapView.annotations == nil)
-        return nil;
-    
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.class.description == 'DestinationMKPointAnnotation'"];
-    return [mapView.annotations filteredArrayUsingPredicate:predicate];
-}
-
-- (OriginMKPointAnnotation*) getOriginAnnotation
-{
-    if (mapView.annotations == nil)
-        return nil;
-    
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.class.description == 'OriginMKPointAnnotation'"];
-    return [mapView.annotations filteredArrayUsingPredicate:predicate][0];
-}
-
-- (void)choosePlaceFromPlacemarks:(NSArray*)placemarks
-{
-    placeResults = placemarks;
-    placesTable = [[UITableView alloc] initWithFrame:CGRectMake(10, 45, 264, 130) style:UITableViewStylePlain];
-    placesTable.delegate = self;
-    placesTable.dataSource = self;
-    
-    alertView = [[UIAlertView alloc] initWithTitle:@"Did you mean... " message:@"\n\n\n\n\n\n" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:nil];
-    [alertView addSubview:placesTable];
-    [alertView show];
 }
 
 #pragma mark - BZFoursquareRequestDelegate

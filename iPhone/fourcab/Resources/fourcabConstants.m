@@ -18,4 +18,4 @@ NSString *const fourcabAPIBaseURL = @"http://fourcab.grumpypanda.net";
 // Segue
 NSString *const kSignInSegueId = @"signIn";
 NSString *const kShowPeopleSegueId = @"showPeople";
-
+NSString *const kShowPersonSegueId = @"showPerson";

@@ -5,6 +5,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     <string name="sign_in">Sign In</string>
+    <string name="sign_out">Log Out</string>
     <string name="please_sign_in">Please sign into Foursquare</string>
     <string name="title_activity_check_in">CheckInActivity</string>
     <string name="search">Search</string>
@@ -16,5 +17,6 @@
     <string name="no_api_result">Sorry, there is a problem with the server. Try again later.</string>
     <string name="current_location">Current Location</string>
     <string name="cancel">Cancel</string>
+    <string name="meet_people">Meet these people out front:</string>
 
 </resources>
