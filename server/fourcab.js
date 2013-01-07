@@ -13,6 +13,8 @@ var CONFIG = {
 	max_dropoff_distance_miles: 1.0,
 	polling_timeout: 3 * 60 * 1000,   // three minutes
 
+	sms_considered_current: 30 * 60 * 1000, // half an hour
+
 	TWILIO_ACCOUNT_SID: "AC57cc1066203ab42b113c5e5152f5c8a9",
 	TWILIO_AUTH_TOKEN: "ef4be32135d057ca0ccaef150c063eef",
 	TWILIO_APP_SID: "AP6f44db7a601f4411aeadfeebf9742748",
@@ -50,6 +52,14 @@ function sendSMS(toNumber, smsContent) {
 // GLOBAL STATE
 g_userdb = {};
 
+function UserDbItem() {}
+UserDbItem.prototype.pickup = null; // MUST BE FIXED UP
+UserDbItem.prototype.dropoff = null;
+UserDbItem.prototype.recentPoll = null;
+UserDbItem.prototype.phoneNumber = null;
+UserDbItem.prototype.smsLastSent = null;
+UserDbItem.prototype.blockSMSUntil = null;
+
 
 // State processing
 
@@ -76,25 +86,40 @@ function sendRides(res, userId) {
 	var dbEntry = g_userdb[userId];
 	var now = Date.now();
 
-	// Construct array of [userId, distance between sources, distance between destinations]
-	// for all other users who want a ride. Time people out after 3 minutes without
+	// Construct array of [userId, distance between sources, distance between destinations, outstanding SMS]
+	// for all other users who want a ride. Distance between destinations === false for people
+	// who are aren't looking for a ride RIGHT NOW.
 	var candidates = [];
 	Object.getOwnPropertyNames(g_userdb).forEach(function(otherUserId) {
 		var otherDbEntry = g_userdb[otherUserId];
 
-		if(userId != otherUserId
-		&& otherDbEntry.recentPoll) {
-//		&& now - otherDbEntry.recentPoll >= CONFIG.polling_timeout) {
+		if(userId != otherUserId) {
+
+			// XXX implement 3 minute timeout
+			// && now - otherDbEntry.recentPoll >= CONFIG.polling_timeout) {
+
+			var dropoffDistance = (otherDbEntry.dropoff && otherDbEntry.recentPoll)
+				? calcDistance(dbEntry.dropoff, otherDbEntry.dropoff)
+				: false;
+
 			candidates.push([
 				otherUserId,
 				calcDistance(dbEntry.pickup, otherDbEntry.pickup),
-				calcDistance(dbEntry.dropoff, otherDbEntry.dropoff)
+				dropoffDistance,
+				otherDbEntry.smsLastSent >= now - (CONFIG.sms_considered_current)
 				]);
 		}
 	});
 
 	// exclude everything too far away. then sort by the distance between pickup points
+	// we count, but don't actually include, the registered-but-not-looking
+	var registeredButNotLooking = 0;
 	candidates = candidates.filter(function(x) {
+		if(!x[2] && x[3]) {
+			++registeredButNotLooking;
+			return false;
+		}
+
 		return x[1] <= CONFIG.max_pickup_distance_miles
 			&& x[2] <= CONFIG.max_dropoff_distance_miles;
 	});
@@ -102,11 +127,11 @@ function sendRides(res, userId) {
 	candidates = candidates.sort(function(a,b) { return a[1] - b[1]; });
 
 	// flesh out the data and return as json
-	var data = { possibleCount: 0, waitingCount: 0 };
+	var data = { possibleCount: registeredButNotLooking, waitingCount: 0 };
 
 	if(candidates.length) {
 		data = {
-			possibleCount: 0,
+			possibleCount: registeredButNotLooking,
 			waitingCount: candidates.length,
 			waiting: candidates.map(function(x) {
 				return fsq.userProfileFromIdSync(x[0]);
@@ -117,6 +142,41 @@ function sendRides(res, userId) {
 	res.json(data);
 }
 
+
+function queueEligibleSmses() {
+	var now = Date.now();
+	var allUserIds = Object.getOwnPropertyNames(g_userdb);
+
+	allUserIds.forEach(function(userId) {
+		var entry = g_userdb[userId];
+
+		if(entry.recentPoll
+		|| entry.smsLastSent >= now - CONFIG.sms_considered_current
+		|| entry.blockSMSUntil && now < entry.blockSMSUntil )
+		{
+			return;
+		}
+
+		var shouldSms = false;
+		allUserIds.forEach(function(otherUserId) {
+			if(userId == otherUserId)
+				return;
+
+			var otherEntry = g_userdb[otherUserId];
+			if(otherEntry.recentPoll && calcDistance(entry.pickup, otherEntry.pickup) < CONFIG.max_pickup_distance_miles)
+				shouldSms = true;
+		});
+
+		if(shouldSms) {
+			entry.smsLastSent = now;
+			entry.blockSMSUntil = now + CONFIG.sms_considered_current;
+			sendSMS(entry.phoneNumber,
+				"Someone is using FourCab nearby right now! Open up FourCab to share a ride with them.");
+		}
+	});
+}
+
+
 //
 // WEB SERVER
 //
@@ -126,15 +186,20 @@ app.use(express.bodyParser());
 
 
 app.post('/api/checkin/', function(req,res) {
+	// XXX validate the data!
+
 	console.log(req.body);
 	fsq.fetchUserWithOauth(req.body.foursquareOauthToken, function(err,userId) {
 		if(err) throw err;
 
-		if(!g_userdb[userId]) g_userdb[userId] = {};
+		if(!g_userdb[userId]) g_userdb[userId] = new UserDbItem();
 
 		g_userdb[userId].pickup = req.body.pickup;
 		g_userdb[userId].dropoff = req.body.dropoff;
 		g_userdb[userId].recentPoll = Date.now();
+
+		// do this first so sendRides has an accurate "smsed users" count
+		queueEligibleSmses();
 
 		sendRides(res, userId);
 		console.log('AFTER /api/checkin/ CALL:', g_userdb);
@@ -173,10 +238,53 @@ app.post('/api/rides/', function(req,res) {
 });
 
 app.post('/4push/', function(req,res) {
+	// XXX check the secret is what it should be
 	console.log('');
+
+	var checkin = JSON.parse(req.body.checkin);
+
+	// Does the person have a phone number, and are they checking in somewhere
+	// with a location we can use?
+	var usefulForSms = !!(
+		checkin.user
+		&& checkin.user.id
+		&& checkin.user.contact
+		&& checkin.user.contact.phone && checkin.user.contact.phone.length
+		&& checkin.venue
+		&& checkin.venue.name && checkin.venue.name.length
+		&& checkin.venue.location
+		&& checkin.venue.location.lat
+		&& checkin.venue.location.lng);
+
 	console.log('POST TO /4push/');
-	console.log('', req.body);
-	console.log('');
+	console.log('', checkin);
+	console.log('useful for SMS?', usefulForSms);
+
+	// XXX if they've moved too far from where the last sms was sent.. we want to reset
+	// their state. but not otherwise! and blocking more SMSes... argh my head hurts
+	if(g_userdb[checkin.user.id])
+		g_userdb[checkin.user.id].smsLastSent = null;
+
+	if(usefulForSms) {
+		if(!g_userdb[checkin.user.id]) g_userdb[checkin.user.id] = new UserDbItem();
+		var dbEntry = g_userdb[checkin.user.id];
+
+		// XXX do something like this if(!dbEntry.recentPoll) {
+		dbEntry.pickup = {
+			lat: checkin.venue.location.lat,
+			lng: checkin.venue.location.lng,
+			foursquare_venue_id: checkin.venue.id,
+			name: checkin.venue.name,
+			street_address: checkin.venue.location.address || null
+		};
+		//XXX//dbEntry.dropoff = null;
+		//XXX//dbEntry.recentPoll = null;
+		dbEntry.blockSMSUntil = null; // checkin resets this!
+		dbEntry.phoneNumber = checkin.user.contact.phone;
+
+		queueEligibleSmses();
+	}
+		
 });
 
 
@@ -194,7 +302,7 @@ twilio_cli.account.getApplication(CONFIG.TWILIO_APP_SID, function(err, twilio) {
 
 	app.listen(CONFIG.port);
 
-	sendSMS(MONITOR_PHONE_NUMBER, "fourcab.js has been started");
+//	sendSMS(CONFIG.MONITOR_PHONE_NUMBER, "fourcab.js has been started");
 });
 
 
