@@ -151,6 +151,7 @@ function queueEligibleSmses() {
 		var entry = g_userdb[userId];
 
 		if(entry.recentPoll
+		|| !entry.phoneNumber
 		|| entry.smsLastSent >= now - CONFIG.sms_considered_current
 		|| entry.blockSMSUntil && now < entry.blockSMSUntil )
 		{
